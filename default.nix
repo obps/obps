@@ -23,9 +23,12 @@ let
         pkgs.rPackages.ggmosaic
         pkgs.bc
       ];
-      configurePhase = ''rm -rf o; echo ${src}'';
+      #configurePhase = ''rm -rf o'';
       buildPhase = "zymake -l localhost zymakefile";
-      installPhase = ''echo $out; cp o/zymakefile/*.pdf $out'';
+      installPhase = ''
+        mkdir -p $out/pdfs/
+        mv o/zymakefile/*.pdf $out/pdfs
+        '';
     };
   };
 in
