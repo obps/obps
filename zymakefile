@@ -12,11 +12,11 @@ policyfams = policyfam_full policyfam_small policyfam_normal
 
 periods = 604800 86400
 
-period = 86400
+period = 604800
 
 threshold = 200000
 
-metaids = $(range 1 30)
+metaids = $(range 1 20)
 
 strids = $(range 1 5)
 
@@ -214,11 +214,11 @@ $(metaid=*metaids ).selectf
 
 : pwd; echo
 '
-$(trace=*traces type="cumobj_bandit_diffb" pfam=policyfam_full period=period hyper=0 ).pdf
-$(trace=*traces type="cumobj_bandit_diff" pfam=policyfam_full period=period hyper=0 ).pdf
-$(trace=*traces type="mosaic" strategy="bandit-clairvoyant" pfam=policyfam_full period=period hyper=0).pdf
-$(trace=*traces type="mosaic" strategy="bandit-noisy" pfam=policyfam_full period=period  hyper=0).pdf
-$(trace=*traces type="mosaic" strategy="bandit-onpolicy" rewardtype="raw" banditType="expgreedy" pfam=policyfam_full period=period hyper="0.5").pdf
+$(trace="KTH-SP2" type="cumobj_bandit_diffb" pfam=policyfam_full period=period hyper=0 ).pdf
+$(trace="KTH-SP2" type="cumobj_bandit_diff" pfam=policyfam_full period=period hyper=0 ).pdf
+$(trace="KTH-SP2" type="mosaic" strategy="bandit-clairvoyant" pfam=policyfam_full period=period hyper=0).pdf
+$(trace="KTH-SP2" type="mosaic" strategy="bandit-noisy" pfam=policyfam_full period=period  hyper=0).pdf
+$(trace="KTH-SP2" type="mosaic" strategy="bandit-onpolicy" rewardtype="raw" banditType="expgreedy" pfam=policyfam_full period=period hyper="0.5").pdf
 '
 
 #$(trace="l_kth_sp" tracename="KTH-SP2"    type="cumobj_bandit_diffb" pfam=policyfam_full period=86400 hyper=0 ).pdf
