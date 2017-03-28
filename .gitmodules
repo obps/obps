@@ -1,3 +1,6 @@
 [submodule "ocst"]
 	path = ocst
 	url = https://github.com/freuk/ocst.git
+[submodule "obandit"]
+	path = obandit
+	url = https://github.com/freuk/obandit.git
