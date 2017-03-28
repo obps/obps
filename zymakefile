@@ -1,5 +1,5 @@
-#traces= l_kth_sp l_ctc_sp
 traces=l_sdsc_b l_ctc_sp l_kth_sp l_sdsc_s l_cea_cu l_unilug
+#traces= l_kth_sp l_ctc_sp
 
 policyfam_full = wait mwait lpf spf sqf lqf expfact mexpfact lrf srf laf saf
 
@@ -229,7 +229,6 @@ $(trace="l_kth_sp" type="mosaic" strategy="bandit-clairvoyant" pfam=policyfam_fu
 $(trace="l_kth_sp" type="mosaic" strategy="bandit-noisy" pfam=policyfam_full  hyper=0).pdf
 $(trace="l_kth_sp" type="mosaic" strategy="bandit-onpolicy" rewardtype="raw" banditType="expgreedy" pfam=policyfam_full period=86400 hyper="0.5").pdf
 '
-
 
 #$(trace="l_kth_sp" tracename="KTH-SP2"    type="cumobj_bandit_diffb" pfam=policyfam_full period=86400 hyper=0 ).pdf
 

@@ -1,11 +1,5 @@
 {pkgs ? import <nixpkgs> {} }:
 let
-  tb = pkgs.fetchurl {
-    url= "https://github.com/NixOS/nixpkgs/archive/38b2e27.tar.gz";
-    sha256= "1pgvmnf3zbcz6wa0l9synaav413nf7aazz2qkz14l58nkiwjh55f";
-  };
-in with import tb {};
-let
   callPackage = pkgs.lib.callPackageWith (pkgs // pkgs.xlibs // self);
   self = rec {
     obandit = pkgs.ocamlPackages.callPackage pkgs/obandit { };
@@ -26,11 +20,12 @@ let
         pkgs.rPackages.dplyr
         pkgs.rPackages.lubridate
         pkgs.rPackages.directlabels
+        pkgs.rPackages.ggmosaic
         pkgs.bc
       ];
       configurePhase = ''rm -rf o; echo ${src}'';
       buildPhase = "zymake -l localhost zymakefile";
-      installPhase = ''echo "e"'';
+      installPhase = ''cp o/zymakefile/*.pdf /share"'';
     };
   };
 in
