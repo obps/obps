@@ -25,7 +25,7 @@ let
       ];
       configurePhase = ''rm -rf o; echo ${src}'';
       buildPhase = "zymake -l localhost zymakefile";
-      installPhase = ''cp o/zymakefile/*.pdf /share'';
+      installPhase = ''echo $out; cp o/zymakefile/*.pdf $out'';
     };
   };
 in
