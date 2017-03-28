@@ -12,7 +12,7 @@ policyfams = policyfam_full policyfam_small policyfam_normal
 
 periods = 604800 86400
 
-period = 604800
+period = 86400
 
 threshold = 200000
 
