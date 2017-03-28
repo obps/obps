@@ -166,17 +166,7 @@ $(< type="simulated" strategy="bandit-onpolicy" rewardtype="raw" banditType="exp
 -o $(> type="cumobj_bandit").pdf
 
 misc/visu/cumobj_diff.R
-$(< type="simulated" strategy="fixed" prim="mwait").swf
-$(< type="simulated" strategy="fixed" prim="lpf").swf
-$(< type="simulated" strategy="fixed" prim="spf").swf
-$(< type="simulated" strategy="fixed" prim="sqf").swf
-$(< type="simulated" strategy="fixed" prim="lqf").swf
-$(< type="simulated" strategy="fixed" prim="expfact").swf
-$(< type="simulated" strategy="fixed" prim="mexpfact").swf
-$(< type="simulated" strategy="fixed" prim="lrf").swf
-$(< type="simulated" strategy="fixed" prim="srf").swf
-$(< type="simulated" strategy="fixed" prim="laf").swf
-$(< type="simulated" strategy="fixed" prim="saf").swf
+$(< type="simulated" strategy="fixed" prim=*pfam).swf
 -t "LCFS" -t "LPF" -t "SPF" -t "SQF" -t "LQF" -t "EXP" -t "LEXP" -t "LRF" -t "SRF" -t "LAF" -t "SAF"
 -o $(>).cumDiffS
 
