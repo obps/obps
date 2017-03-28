@@ -1,0 +1,250 @@
+#traces= l_kth_sp l_ctc_sp
+traces=l_sdsc_b l_ctc_sp l_kth_sp l_sdsc_s l_cea_cu l_unilug
+
+policyfam_full = wait mwait lpf spf sqf lqf expfact mexpfact lrf srf laf saf
+
+policyfam_normal = wait spf sqf lqf expfact
+
+policyfam_small = spf wait
+
+policyfams = policyfam_full policyfam_small policyfam_normal
+
+periods = 604800 86400
+
+period = 86400
+
+threshold = 200000
+
+metaids = $(range 1 2)
+
+strids = $(range 1 5)
+
+sfsids = $(range 1 20)
+
+back = wait
+
+################################### Data Management ##################################
+
+#cp traces
+cp gz/$(trace).swf.gz $(>).swf_gz
+
+#unzipping
+gunzip $(<).swf_gz -c > $(>).swf_unescaped
+
+#unzipping
+cat $(<).swf_unescaped | sed 's/\r//g' > $(>).swf_unfiltered
+
+#filtering
+misc/strong_filter $(<).swf_unfiltered $(> type = "whole").swf
+
+#shuffling
+ocs-sampler -i $(< type = "whole").swf
+-o $(> type = "shuffled").swf -seed ` bc <<< $(sfid)+10000*$(metaid) `
+
+#trimming
+ocs-trimmer -i $(< type="shuffled").swf -o $(> type="trimmed").swf
+
+#cutting
+ocs-subtrace -i $(< type="trimmed").swf
+-o $(> type ="week").swf -wk $(strid) -span 2
+
+#joining
+ocs-swftk join $(> type ="long-nohead").swf $(< strid=*strids sfid=*sfsids type="week").swf
+
+cat $(< type="whole").swf | grep ";" > $(> type="header").swf
+
+cat $(< type="header").swf $(< type="long-nohead").swf > $(> type="long").swf
+
+########################################## Experiments #####################################
+
+#basic strategy
+ocs threshold $(< type="long").swf
+--backfill=$(prim)
+--th_objective=wait
+--threshold=$(threshold)
+--primary=$(prim)
+--output=$(> type="simulated" strategy="fixed").swf
+> $().out
+
+#BANDIT random
+ocs bandit-random $(< type="long").swf
+--threshold=$(threshold)
+--policies=`echo $(pfam)| sed 's/ /,/g'`
+--period=$(period)
+--output=$(> type="simulated" strategy="bandit-random").swf
+> $().out
+
+#BANDIT clairvoyant
+ocs bandit-onpolicy $(< type="long").swf
+--clairvoyant
+--threshold=$(threshold)
+--policies=`echo $(pfam)| sed 's/ /,/g'`
+--period=$(period)
+--output=$(> type="simulated" strategy="bandit-clairvoyant").swf
+--select=$(> strategy="bandit-clairvoyant").select
+> $().out
+
+#BANDIT on-policy
+ocs bandit-onpolicy $(< type="long").swf
+--rewardtype=$(rewardtype)
+--hyperparameter=$(hyper)
+--threshold=$(threshold)
+--policies=`echo $(pfam)| sed 's/ /,/g'`
+--period=$(period)
+--output=$(> type="simulated" strategy="bandit-onpolicy").swf
+--algo=$(banditType)
+--reset=$(>).reset
+--select=$(> strategy="bandit-onpolicy").select
+--seed=${RANDOM}
+> $().out
+
+#BANDIT clairvoyant
+ocs bandit-onpolicy $(< type="long").swf
+--clairvoyant
+--noisy
+--threshold=$(threshold)
+--policies=`echo $(pfam)| sed 's/ /,/g'`
+--period=$(period)
+--output=$(> type="simulated" strategy="bandit-noisy").swf
+--select=$(> strategy="bandit-noisy").select
+> $().out
+
+########################################## Visu #####################################
+
+################# Statistics
+
+misc/visu/flow_multiple.sh $(< type="simulated" metaid=*metaids).swf > $(>).awkstats
+
+cat $().awkstats | awk '{sum+=$1} END { print $7,sum/NR}' > $().avgw
+
+cat
+$(< type="simulated" strategy="fixed" prim=*pfam).avgw
+$(< type="simulated" strategy="bandit-random" ).avgw
+$(< type="simulated" strategy="bandit-crairvoyant" ).avgw
+$(< type="simulated" strategy="bandit-onpolicy"  banditType="exp").avgw
+> $(> type="allstats").txt
+
+#################
+
+#################"Unique" cumulative plots
+
+misc/visu/draw_cumulative.R
+$(< type="simulated" strategy="fixed" prim=*pfam).swf
+-o $(> type="evolution-fixed").png
+
+misc/visu/draw_cumulative.R
+$(< type="simulated" strategy="bandit-random" ).swf
+$(< type="simulated" strategy="fixed" prim=*pfam ).swf
+$(< type="simulated" strategy="bandit-clairvoyant" ).swf
+$(< type="simulated" strategy="bandit-onpolicy"  banditType="exp").swf
+-l $(< type="simulated" strategy="bandit-onpolicy"  banditType="exp").reset
+-o $(> type="evolution").png
+
+#################
+
+################# Aggregated cumulative plots.
+
+misc/visu/average_cumobj.R $(< type="simulated" metaid=*metaids).swf -o $(>).cumtable
+
+misc/visu/average_cumobj_plot.R
+$(< type="simulated" strategy="fixed" prim=*pfam).cumtable
+-o $(> type="cumobj_base").pdf
+
+small_hl = 0.05 0.1 0.2 0.5
+
+strange_hl = 0.01 0.1 1 10
+
+rwts = basic centered ratio raw
+
+misc/visu/average_cumobj_plot.R
+$(< type="simulated" strategy="fixed" prim="wait").cumtable
+$(< type="simulated" strategy="bandit-random" ).cumtable
+$(< type="simulated" strategy="bandit-clairvoyant" rewardtype="raw").cumtable
+$(< type="simulated" strategy="bandit-noisy" rewardtype="raw").cumtable
+$(< type="simulated" strategy="bandit-onpolicy" rewardtype="raw" banditType="expgreedy" hyper="0.5").cumtable
+-o $(> type="cumobj_bandit").pdf
+
+misc/visu/cumobj_diff.R
+$(< type="simulated" strategy="fixed" prim="mwait").swf
+$(< type="simulated" strategy="fixed" prim="lpf").swf
+$(< type="simulated" strategy="fixed" prim="spf").swf
+$(< type="simulated" strategy="fixed" prim="sqf").swf
+$(< type="simulated" strategy="fixed" prim="lqf").swf
+$(< type="simulated" strategy="fixed" prim="expfact").swf
+$(< type="simulated" strategy="fixed" prim="mexpfact").swf
+$(< type="simulated" strategy="fixed" prim="lrf").swf
+$(< type="simulated" strategy="fixed" prim="srf").swf
+$(< type="simulated" strategy="fixed" prim="laf").swf
+$(< type="simulated" strategy="fixed" prim="saf").swf
+-t "LCFS" -t "LPF" -t "SPF" -t "SQF" -t "LQF" -t "EXP" -t "LEXP" -t "LRF" -t "SRF" -t "LAF" -t "SAF"
+-o $(>).cumDiffS
+
+misc/visu/cumobj_diff.R
+$(< type="simulated" strategy="fixed" prim="wait").swf
+$(< type="simulated" strategy="bandit-random").swf
+$(< type="simulated" strategy="bandit-clairvoyant" rewardtype="raw").swf
+$(< type="simulated" strategy="bandit-noisy" rewardtype="raw").swf
+$(< type="simulated" strategy="bandit-onpolicy" rewardtype="raw" banditType="expgreedy" hyper="0.5").swf
+-t "Random" -t "Full" -t "Noisy" -t "Bandit"
+-o $(>).cumDiffB
+
+misc/visu/cumobj_diffplot.R
+$(< type="simulated" metaid=*metaids).cumDiffS
+-i $(< type="simulated" strategy="fixed" prim="wait").cumtable
+-o $(> type="cumobj_bandit_diff").pdf
+
+misc/visu/cumobj_diffplot.R
+$(< type="simulated" metaid=*metaids).cumDiffB
+-i $(< type="simulated" strategy="fixed" prim="wait").cumtable
+-t $(tracename)
+-o $(> type="cumobj_bandit_diffb").pdf
+
+cat $(<).select
+| cut -d' ' -f2,3,4,5,6,7
+| sed 's/Inverse Resource Requirement/LQF/g'
+| sed 's/Inverse Expansion Factor/LEXP/g'
+| sed 's/Inverse Job maximum Area/LAF/g'
+| sed 's/Inverse Q\/P ratio/LRF/g'
+| sed 's/Inverse Processing time/LPF/g'
+| sed 's/Inverse Waiting Time/LCFS/g'
+| sed 's/Processing time/SPF/g'
+| sed 's/Waiting Time/SPF/g'
+| sed 's/Expansion Factor/EXP/g'
+| sed 's/Job maximum Area/SAF/g'
+| sed 's/Q\/P ratio/SRF/g'
+| sed 's/Resource Requirement/SQF/g'
+> $(>).selectf
+
+misc/visu/mosaic.R
+$(metaid=*metaids ).selectf
+-o $(> type="mosaic").pdf
+
+####################################Targets################################
+
+: pwd; echo
+'
+$(trace="l_kth_sp" tracename="KTH-SP2"     type="cumobj_bandit_diffb" pfam=policyfam_full  hyper=0 ).pdf
+$(trace="l_kth_sp" tracename="KTH-SP2"     type="cumobj_bandit_diff" pfam=policyfam_full  hyper=0 ).pdf
+$(trace="l_kth_sp" type="mosaic" strategy="bandit-clairvoyant" pfam=policyfam_full  hyper=0).pdf
+$(trace="l_kth_sp" type="mosaic" strategy="bandit-noisy" pfam=policyfam_full  hyper=0).pdf
+$(trace="l_kth_sp" type="mosaic" strategy="bandit-onpolicy" rewardtype="raw" banditType="expgreedy" pfam=policyfam_full period=86400 hyper="0.5").pdf
+'
+
+
+#$(trace="l_kth_sp" tracename="KTH-SP2"    type="cumobj_bandit_diffb" pfam=policyfam_full period=86400 hyper=0 ).pdf
+
+#$(trace="l_unilug" type="cumobj_bandit_diffb" pfam=policyfam_full period=86400 hyper=0 legend="true").pdf
+
+#$(trace=*traces type="cumobj_bandit_diffb" pfam=policyfam_full period=86400 hyper=0).pdf
+
+#(trace=*traces type="evolution" pfam=policyfam_small period=86400 hyper=0 rewardtype="raw" metaid="1").png
+#$(metaid=1 rewardtype="raw" trace="l_ctc_sp" type="evolution" pfam=policyfam_small period=86400  hyper="0.5").png
+
+#$(trace="l_ctc_sp" type="cumobj_bandit" pfam=policyfam_small period=86400).pdf
+#$(trace="l_ctc_sp" type="cumobj_bandit2" pfam=policyfam_small period=86400).pdf
+#$(trace="l_ctc_sp" type="cumobj_bandit3" pfam=policyfam_small period=86400).pdf
+
+#$(trace=*traces type="cumobj_bandit" pfam=policyfam_normal period="86400").pdf
+#$(trace=*traces type="allstats" pfam=policyfam_full period=*periods ).txt
+#$(trace=*traces type="cumobj_base" pfam=policyfam_full period=*periods ).pdf
+#$(trace=*traces type="cumobj_bandit" pfam=policyfam_full).pdf

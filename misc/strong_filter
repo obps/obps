@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+#usage: strong_filter_all_swf
+#output inplace
+file="$1"
+output="$2"
+
+echo strong_filtering $file
+
+#print header
+awk '($1==";"){print}' $file > $output
+
+#get maxcores
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+maxprocs=`$DIR/extract_maxprocs.py $file`
+echo maxprocs $maxprocs
+
+#remove header for treatment
+awk '!($1==";"){print}' $file |
+
+#allocated_cores <= maxprocs
+awk -v m=$maxprocs '($5<=m){print}' |
+
+#requested_cores  <= maxprocs
+awk -v m=$maxprocs '($8<=m){print}' |
+
+#requested_cores and allocated_cores management: if all strictly positive dont touch, if one is, take it for both, and if none are, do not print.
+awk '{
+if ($8<=0 && $5<=0)
+  p=43;
+else if ($8>0 && $5<=0)
+  {$5 = $8;
+  print;}
+else if ($5>0 && $8<=0)
+  {$8 = $5;
+  print;}
+else
+  print;
+}' |
+
+#runtime >0
+awk '($4>0){print}' |
+
+#time_req to runtime if time_req<=0
+awk '{
+if ($9<=0)
+  p=43
+else
+  print;
+}' |
+
+#if req_time < run_time
+awk '{
+if ($9<$4){p=43}
+else
+  print;
+}' |
+
+#sub_time >0
+awk '($2>=0){print}' >> $output
