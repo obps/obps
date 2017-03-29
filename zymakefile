@@ -16,7 +16,7 @@ period = 86400
 
 threshold = 200000
 
-metaids = $(range 1 50)
+metaids = $(range 1 10)
 
 strids = $(range 1 5)
 
@@ -176,7 +176,8 @@ $(< type="simulated" strategy="bandit-random").swf
 $(< type="simulated" strategy="bandit-clairvoyant" rewardtype="raw").swf
 $(< type="simulated" strategy="bandit-noisy" rewardtype="raw").swf
 $(< type="simulated" strategy="bandit-onpolicy" rewardtype="raw" banditType="expgreedy" hyper="0.5").swf
--t "Random" -t "Full" -t "Noisy" -t "Bandit"
+$(< type="simulated" strategy="bandit-onpolicy" rewardtype="raw" banditType="expgreedy" hyper="0.2").swf
+-t "Random" -t "Full" -t "Noisy" -t "Bandit5" -t "Bandit2"
 -o $(>).cumDiffB
 
 misc/visu/cumobj_diffplot.R
@@ -214,11 +215,11 @@ $(metaid=*metaids ).selectf
 
 : pwd; echo
 '
-$(trace=*traces type="cumobj_bandit_diffb" pfam=policyfam_full period=period hyper=0 ).pdf
-$(trace=*traces type="cumobj_bandit_diff" pfam=policyfam_full period=period hyper=0 ).pdf
-$(trace=*traces type="mosaic" strategy="bandit-clairvoyant" pfam=policyfam_full period=period hyper=0).pdf
-$(trace=*traces type="mosaic" strategy="bandit-noisy" pfam=policyfam_full period=period  hyper=0).pdf
-$(trace=*traces type="mosaic" strategy="bandit-onpolicy" rewardtype="raw" banditType="expgreedy" pfam=policyfam_full period=period hyper="0.1").pdf
+$(trace="KTH-SP2" type="cumobj_bandit_diffb" pfam=policyfam_full period=period hyper=0 ).pdf
+$(trace="KTH-SP2" type="cumobj_bandit_diff" pfam=policyfam_full period=period hyper=0 ).pdf
+$(trace="KTH-SP2" type="mosaic" strategy="bandit-clairvoyant" pfam=policyfam_full period=period hyper=0).pdf
+$(trace="KTH-SP2" type="mosaic" strategy="bandit-noisy" pfam=policyfam_full period=period  hyper=0).pdf
+$(trace="KTH-SP2" type="mosaic" strategy="bandit-onpolicy" rewardtype="raw" banditType="expgreedy" pfam=policyfam_full period=period hyper="0.1").pdf
 '
 
 #$(trace="l_kth_sp" tracename="KTH-SP2"    type="cumobj_bandit_diffb" pfam=policyfam_full period=86400 hyper=0 ).pdf
