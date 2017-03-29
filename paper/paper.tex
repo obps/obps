@@ -6,7 +6,6 @@
 \usepackage{url}
 \usepackage[utf8]{inputenc}
 \usepackage{tikz}
-\usepackage{todo}
 \usepackage{graphicx}
 \usepackage{mathtools}
 \usepackage{float}
@@ -195,9 +194,10 @@ use collaborative filtering to colocate tasks in clouds by estimating
 application interference~\cite{7516031}.  Others are closer to the application
 level and use binary classification to distinguish benign memory faults from
 application errors in order to execute recovery algorithms (see
-~\cite{fmodeling} for instance).
+~\cite{fmodeling} for instance). 
 
-Several works use this method in the context of HPC, in
+
+Several works take a similar approach in the context of HPC, in
 particular~\cite{Tsafrir_easypp_2005,learningruntimes}, hoping that better job
 runtime estimations should improve the scheduling~\cite{chiang_impact_2002}.
 Some algorithms estimate runtime distributions model and choose jobs using
@@ -206,8 +206,14 @@ probabilistic integration procedures~\cite{Nissimov2008}.
 However, these works do not address the duality between the cumulative and
 maximal scheduling costs, as mentionned in~\cite{learningruntimes}.
 
-While these previous works intend to estimate uncertain parameters, we consider in this paper a more
-pragmatic approach, which directly learn a good scheduling policy from a given policy space.
+A recent work~\cite{mlmem} proposes to help
+users specify better memory requirements by applying supervised learning
+techniques to job metadata.
+
+While these previous works intend to estimate uncertain parameters, they lack
+in validating the impact on the system. We consider in this paper a more
+pragmatic approach, which is to directly learn a scheduling policy from a given
+seach space.
 
 \subsection{Multi-Armed Bandits}
 
@@ -232,8 +238,8 @@ this requirement.
 \label{sec:problem_setting}
 
 This section presents the systems under study and the scheduling problem.  It
-first introduces the EASY-Backfilling heuristic and gives \todo{fix} the
-problem statement.
+first introduces the EASY-Backfilling heuristic and gives
+\textcolor{orange}{(fix ugly sentence)} the problem statement.
 
 \subsection{System Description}
 \label{sub:sysdesc}
@@ -313,7 +319,7 @@ approach to managing this aspect.
 \subsection{Problem Statement}
 
 Our problem statement is: \textbf{How to tune EASY-Backfilling in an online manner?}
-\todo{introduce the difference in workloads, the duality of avg and max, and the online problem}
+\textcolor{orange}{introduce the difference in workloads, the duality of avg and max, and the online problem}
 
 \section{Tuning EASY by reordering and thresholding the job queue}
 \label{sec:framework}
@@ -323,6 +329,7 @@ job queue reordering and job thresholding. Together, these two building blocks
 constitute a robust framework for tuning EASY.
 
 \subsection{Reordering the job Queue}
+\label{subsec:policies}
 
 The EASY heuristic uses a job queue to select and backfill jobs. While this job
 queue is ordered in FCFS order in the original heuristic, it is possible to
@@ -353,6 +360,7 @@ practice. In the following, we denote these policies by $P_i$ with $i = 1
 \ldots 10$.
 
 \subsection{Thresholding}
+\label{sub:th}
 As existing works point out, reordering the job queue means losing the
 no-starvation guarantee and some individual jobs therefore can wait an undue
 amount of time. It is possible to introduce a thresholding mechanism in order
@@ -468,7 +476,6 @@ for the interested reader.
 \subsubsection{Traces}
 
 \begin{table}[ht]
-  \vspace{-0.5cm}
   \centering
   \ra{1.3}
   \caption{Workload logs used in the simulations.}
@@ -486,7 +493,6 @@ for the interested reader.
     Unilu-Gaia    & 2014 & 2,004        & 51k     & 4  Months\\
     \hline
   \end{tabular}
-  \vspace{-0.5cm}
 \end{table}
 
 The experimental campaign used in this work uses a mixture of small and large
@@ -511,20 +517,24 @@ The choice of a simulator is a critical part of experimental validation that
 raises a tradeoff between precision and runtime. High precision can be obtained
 by carefully modeling the platform and its network topology, or extracting
 information from the jobs from their sources or post-morted logs. This is the
-approach used by high-fidelity batch scheduling simulators such as Batsim~\cite{batsim}. In
-the present work, the focus is on studying the EASY-Backfilling mechanism in
-itself, without adressing the allocation problem. Moreover, the experimental
-protocol used here requires many simulation runs. Therefore, we set the
-precision/runtime tradeoff at the point which minimizes simulation runtimes. We
-discard all topological information relative to the platform and use the job
-processing times of the original workloads. In this setup, the processors are
-considered to be undistinguishable from each other, and jobs can be
-discontinuously mapped to any available processor on the system. We develop
-a lightweight simulator\cite{ocst} and an accompanying multi-armed bandit
-library\cite{obandit}. See the reproducibility paragraph below for more information.
-With this simulator, we are able to replay the CEA-CURIE trace in 33 seconds on a
-machine equipped with an Intel(R) Core(TM) i5-4310U CPU @ 2.00GHz, while the
-same simulation with the Batsim simulator takes more than 5 hours.
+approach used by high-fidelity batch scheduling simulators such as
+Batsim~\cite{batsim}. In the present work, the focus is on studying the
+EASY-Backfilling mechanism in itself, without adressing the allocation problem.
+Moreover, the experimental protocol used here requires many simulation runs.
+Therefore, we set the precision/runtime tradeoff at the point which minimizes
+simulation runtimes. We discard all topological information relative to the
+platform and use the job processing times of the original workloads. In this
+setup, the processors are considered to be undistinguishable from each other,
+and jobs can be discontinuously mapped to any available processor on the
+system. We develop a lightweight simulator\cite{ocst} and an accompanying
+multi-armed bandit library\cite{obandit}. See the reproducibility paragraph
+below for more information.  With this simulator, we are able to replay
+EASY-FCFS on the CEA-CURIE trace in 33 seconds with a machine equipped with an
+Intel(R) Core(TM) i5-4310U CPU @ 2.00GHz. As a point of comparison, the Batsim
+simulator with no network communication modeling and no resource contiguity
+takes more than 7 hours to replay the same trace on the same hardware. The complete
+simulation campaign presented below is executed on a single Dell PowerEdge R730 in 22
+hours, including input preparation and analysis code.
 
 \subsubsection{Resampling}
 
@@ -553,10 +563,15 @@ identically distributed process when considering sufficiently time spaced weeks.
 
 \subsubsection{Experimental campaign}
 
+
 \subsubsection{Replicability}
 
 Readers interested in replicating the experiments (or a part thereof) are
-invited to peruse to the 'artifacts description' appendix of this paper.
+invited to peruse to the 'artifacts description' appendix of this paper.  We
+provide to persistent archives containing the simulator used, the analysis code
+and the associated workflow necessary to replicate all experiments and figures
+present in this paper. All these parts's dependencies are automatically managed
+via Nix~\cite{nix} and we invite the reader to replicate the results.
 
 \subsection{Results}
 \label{sub:results}
@@ -580,7 +595,7 @@ figure is followed-up in figure~\ref{fig:follow} for the CEA-Curie log.}
   \label{fig:small}
 \end{figure*}
 
-\begin{figure}[ht]
+\begin{figure}[H]
   \centering
   \includegraphics[scale=0.6]{cea_cu.pdf}
 
@@ -589,7 +604,7 @@ figure is followed-up in figure~\ref{fig:follow} for the CEA-Curie log.}
   \label{fig:follow}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[H]
   \centering
   \includegraphics[scale=0.6]{all.pdf}
   \caption{Share of the policies chosen by the Noisy policy. The average
@@ -598,7 +613,7 @@ figure is followed-up in figure~\ref{fig:follow} for the CEA-Curie log.}
   \label{fig:all}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[H]
   \centering
   \includegraphics[scale=0.6]{mosaic_bandit.pdf}
   \caption{Share of the policies chosen by Epsilon-Greedy as a function of time.
@@ -619,7 +634,7 @@ figure is followed-up in figure~\ref{fig:follow} for the CEA-Curie log.}
 \section{Conclusion}
 \label{sec:ccl}
 
-\section*{Acknowledgments}
+\begin{acks}
 
 Authors are sorted in alphabetical order. We gracefully thank the contributors
 of the Parallel Workloads Archive, Victor Hazlewood (SDSC SP2), Travis Earheart
@@ -628,13 +643,16 @@ Steve Hotovy (CTC SP2), Joseph Emeras (CEA Curie and UniLu Gaia), Susan
 Coghlan, Narayan Desay, Wei Tang (ANL Intrepid), and of course Dror Feitelson.
 The Metacentrum workload log was graciously provided by the Czech National Grid
 Infrastructure MetaCentrum. This work has been partially supported by the LabEx
-PERSYVAL-Lab (ANR-11-LABX-0025-01) funded by the French program Investissement
-d'avenir. Experiments presented in this paper were carried out using the
-Grid'5000 testbed. Grid'5000 is supported by a scientific interest group hosted
-by Inria and including CNRS, RENATER and several Universities as well as other
+PERSYVAL-Lab(\grantsponsor{ANR-11-LABX-0025-01}{ANR-11-LABX-0025-01}) funded by
+the French program Investissement d'avenir. Experiments presented in this paper
+were carried out using the Grid'5000 testbed. Grid'5000 is supported by a
+scientific interest group hosted by Inria and including CNRS, RENATER and
+several Universities as well as other
 organizations\footnote{https://www.grid5000.fr}.  Access to the experimental
 machine(s) used in this paper was gracefully granted by research teams from
 LIG\footnote{http://www.liglab.fr} and Inria\footnote{http://www.inria.fr}.
+
+\end{acks}
 
 \bibliographystyle{acmst}
 \bibliography{bibliography}

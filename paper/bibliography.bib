@@ -471,7 +471,7 @@
     pages={514--519},
     year={2002},
     organization={IEEE}
-  } 
+  }
 
 @inproceedings{feitelson1996toward,
   title={Toward convergence in job schedulers for parallel supercomputers},
@@ -599,7 +599,7 @@ issn = {1935-8237},
 number = {1},
 pages = {1-122},
 author = {Sébastien Bubeck and Nicolò Cesa-Bianchi}
-}%                
+}%
 
 @ARTICLE{banos,
     author = {Author(s) Alfredo Banos and Alfredo Baros and San Fernando and Valley State College},
@@ -623,7 +623,7 @@ author = {Sébastien Bubeck and Nicolò Cesa-Bianchi}
  edition = {1st},
  publisher = {Cambridge University Press},
  address = {New York, NY, USA},
-} 
+}
 
 @Inbook{jsm,
 author="Feitelson, Dror G.",
@@ -680,10 +680,6 @@ url="http://dx.doi.org/10.1007/3-540-45798-4_6"
   howpublished = {\url{http://zenodo.org/}, accessed 03/23/17}
 }
 
-@misc{nix,
-  title = {{The Nix Purely Functional Package Manager}},
-  howpublished = {\url{http://nixos.org/nix/}, accessed 03/23/17}
-}
 
 @misc{ocst,
   author       = {Valentin Reis},
@@ -703,6 +699,16 @@ url="http://dx.doi.org/10.1007/3-540-45798-4_6"
   url          = {https://doi.org/10.5281/zenodo.437875}
 }
 
+
+@misc{repro,
+  author       = {Valentin Reis},
+  title        = {\textcolor{orange}{\textbf{TODO}}},
+  month        = mar,
+  year         = 2017,
+  doi          = {10.5281/zenodo.437875},
+  url          = {https://doi.org/10.5281/zenodo.437875}
+}
+
 @inproceedings{Gaussier2015ImprovingBB,
   title={Improving backfilling by using machine learning to predict running times},
   author={{\'E}ric Gaussier and David Glesser and Valentin Reis and Denis Trystram},
@@ -710,8 +716,41 @@ url="http://dx.doi.org/10.1007/3-540-45798-4_6"
   year={2015}
 }
 
+@inproceedings{mlmem,
+ author = {Rodrigues, Eduardo R. and Cunha, Renato L. F. and Netto, Marco A. S. and Spriggs, Michael},
+ title = {Helping HPC Users Specify Job Memory Requirements via Machine Learning},
+ booktitle = {Proceedings of the Third International Workshop on HPC User Support Tools},
+ series = {HUST '16},
+ year = {2016},
+ isbn = {978-1-5090-3874-9},
+ location = {Salt Lake City, Utah},
+ pages = {6--13},
+ numpages = {8},
+ url = {https://doi.org/10.1109/HUST.2016.7},
+ doi = {10.1109/HUST.2016.7},
+ acmid = {3018836},
+ publisher = {IEEE Press},
+ address = {Piscataway, NJ, USA},
+}
+
+@phdthesis{nix,
+    abstract = {{Software deployment is the set of activities related to getting software components to work on the machines of end users. It includes activities such as installation, upgrading, uninstallation, and so on. Many tools have been developed to support deployment, but they all have serious limitations with respect to correctness. For instance, the installation of a component can lead to the failure of previously installed components; a component might require other components that are not present; and it is generally difficult to undo deployment actions. The fundamental causes of these problems are a lack of isolation between components, the difficulty in identifying the dependencies between components, and incompatibilities between versions and variants of components.
+This thesis describes a better approach based on a purely functional deployment model, implemented in a deployment system called Nix. Components are stored in isolation from each other in a Nix store. Each component has a name that contains a cryptographic hash of all inputs that contributed to its build process, and the content of a component never changes after it has been built. Hence the model is purely functional.
+This storage scheme provides several important advantages. First, it ensures isolation between components: if two components differ in any way, they will be stored in different locations and will not overwrite each other. Second, it allows us to identify component dependencies. Undeclared build time dependencies are prevented due to the absence of  ” global” component directories used in other deployment systems. Runtime dependencies can be found by scanning for cryptographic hashes in the binary contents of components, a technique analogous to conservative garbage collection in programming language implementation. Since dependency information is complete, complete deployment can be performed by copying closures of components under the dependency relation.
+Developers and users are not confronted with components' cryptographic hashes directly. Components are built automatically from Nix expressions, which describe how to build and compose arbitrary software components; hashes are computed as part of this process. Components are automatically made available to users through  ” user environments”, which are synthesised sets of activated components. User environments enable atomic upgrades and rollbacks, as well as different sets of activated components for different users.
+Nix expressions provide a source-based deployment model. However, source-based deployment can be transparently optimised into binary deployment by making pre-built binaries (keyed on their cryptographic hashes) available in a shared location such as a network server. This is referred to as transparent source/binary deployment.
+The purely functional deployment model has been validated by applying it to the deployment of more than 278 existing Unix packages. In addition, this thesis shows that the model can be applied naturally to the related activities of continuous integration using build farms, service deployment and build management.}},
+    author = {Dolstra, Eelco},
+    citeulike-article-id = {1402778},
+    citeulike-linkout-0 = {http://www.cs.uu.nl/\~{}eelco/pubs/phd-thesis.pdf},
+    keywords = {configuration-management, nix},
+    month = jan,
+    posted-at = {2007-06-21 18:06:49},
+    priority = {3},
+    school = {Universiteit Utrecht},
+    title = {{The Purely Functional Software Deployment Model}},
+    url = {http://www.cs.uu.nl/\~{}eelco/pubs/phd-thesis.pdf},
+    year = {2006}
+}
+
 @Comment{jabref-meta: databaseType:bibtex;}
-
-
-
-
