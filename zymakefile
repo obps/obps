@@ -12,7 +12,7 @@ policyfams = policyfam_full policyfam_small policyfam_normal
 
 periods = 604800 86400
 
-period = 604800
+period =  604800
 
 threshold = 200000
 
@@ -22,7 +22,7 @@ strids = $(range 1 5)
 
 sfsids = $(range 1 20)
 
-back = wait
+back = spf
 
 ################################### Data Management ##################################
 
@@ -60,7 +60,7 @@ cat $(< type="header").swf $(< type="long-nohead").swf > $(> type="long").swf
 
 #basic strategy
 ocs threshold $(< type="long").swf
---backfill=$(prim)
+--backfill=$(back)
 --th_objective=wait
 --threshold=$(threshold)
 --primary=$(prim)
@@ -69,6 +69,7 @@ ocs threshold $(< type="long").swf
 
 #BANDIT random
 ocs bandit-random $(< type="long").swf
+--backfill=$(back)
 --threshold=$(threshold)
 --policies=`echo $(pfam)| sed 's/ /,/g'`
 --period=$(period)
@@ -77,6 +78,7 @@ ocs bandit-random $(< type="long").swf
 
 #BANDIT clairvoyant
 ocs bandit-onpolicy $(< type="long").swf
+--backfill=$(back)
 --clairvoyant
 --threshold=$(threshold)
 --policies=`echo $(pfam)| sed 's/ /,/g'`
@@ -87,6 +89,7 @@ ocs bandit-onpolicy $(< type="long").swf
 
 #BANDIT on-policy
 ocs bandit-onpolicy $(< type="long").swf
+--backfill=$(back)
 --rewardtype=$(rewardtype)
 --hyperparameter=$(hyper)
 --threshold=$(threshold)
@@ -101,6 +104,7 @@ ocs bandit-onpolicy $(< type="long").swf
 
 #BANDIT clairvoyant
 ocs bandit-onpolicy $(< type="long").swf
+--backfill=$(back)
 --clairvoyant
 --noisy
 --threshold=$(threshold)
@@ -167,7 +171,8 @@ $(< type="simulated" strategy="bandit-onpolicy" rewardtype="raw" banditType="exp
 
 misc/visu/cumobj_diff.R
 $(< type="simulated" strategy="fixed" prim=*pfam).swf
--t "LCFS" -t "SPF" -t "LQF" -t "EXP" -t "LEXP" -t "LRF" -t "SRF" -t "LAF"
+$(< type="simulated" strategy="bandit-clairvoyant" rewardtype="raw").swf
+-t "LCFS" -t "SPF" -t "LQF" -t "EXP" -t "LEXP" -t "LRF" -t "SRF" -t "LAF" -t "Full"
 -o $(>).cumDiffS
 
 misc/visu/cumobj_diff.R
@@ -215,11 +220,11 @@ $(metaid=*metaids ).selectf
 
 : pwd; echo
 '
-$(trace="KTH-SP2" type="cumobj_bandit_diffb" pfam=policyfam_full period=period hyper=0 ).pdf
-$(trace="KTH-SP2" type="cumobj_bandit_diff" pfam=policyfam_full period=period hyper=0 ).pdf
-$(trace="KTH-SP2" type="mosaic" strategy="bandit-clairvoyant" pfam=policyfam_full period=period hyper=0).pdf
-$(trace="KTH-SP2" type="mosaic" strategy="bandit-noisy" pfam=policyfam_full period=period  hyper=0).pdf
-$(trace="KTH-SP2" type="mosaic" strategy="bandit-onpolicy" rewardtype="raw" banditType="expgreedy" pfam=policyfam_full period=period hyper="0.1").pdf
+$(trace=*traces type="cumobj_bandit_diffb" pfam=policyfam_full period=period hyper=0 ).pdf
+$(trace=*traces type="cumobj_bandit_diff" pfam=policyfam_full period=period hyper=0 ).pdf
+$(trace=*traces type="mosaic" strategy="bandit-clairvoyant" pfam=policyfam_full period=period hyper=0).pdf
+$(trace=*traces type="mosaic" strategy="bandit-noisy" pfam=policyfam_full period=period  hyper=0).pdf
+$(trace=*traces type="mosaic" strategy="bandit-onpolicy" rewardtype="raw" banditType="expgreedy" pfam=policyfam_full period=period hyper="0.1").pdf
 '
 
 #$(trace="l_kth_sp" tracename="KTH-SP2"    type="cumobj_bandit_diffb" pfam=policyfam_full period=86400 hyper=0 ).pdf
