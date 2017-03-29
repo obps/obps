@@ -12,7 +12,7 @@ policyfams = policyfam_full policyfam_small policyfam_normal
 
 periods = 604800 86400
 
-period =  604800
+period = 86400
 
 threshold = 200000
 
@@ -22,7 +22,7 @@ strids = $(range 1 5)
 
 sfsids = $(range 1 20)
 
-back = spf
+back = sqf
 
 ################################### Data Management ##################################
 
@@ -171,8 +171,7 @@ $(< type="simulated" strategy="bandit-onpolicy" rewardtype="raw" banditType="exp
 
 misc/visu/cumobj_diff.R
 $(< type="simulated" strategy="fixed" prim=*pfam).swf
-$(< type="simulated" strategy="bandit-clairvoyant" rewardtype="raw").swf
--t "LCFS" -t "SPF" -t "LQF" -t "EXP" -t "LEXP" -t "LRF" -t "SRF" -t "LAF" -t "Full"
+-t "LCFS" -t "SPF" -t "LQF" -t "EXP" -t "LEXP" -t "LRF" -t "SRF" -t "LAF"
 -o $(>).cumDiffS
 
 misc/visu/cumobj_diff.R
@@ -181,8 +180,7 @@ $(< type="simulated" strategy="bandit-random").swf
 $(< type="simulated" strategy="bandit-clairvoyant" rewardtype="raw").swf
 $(< type="simulated" strategy="bandit-noisy" rewardtype="raw").swf
 $(< type="simulated" strategy="bandit-onpolicy" rewardtype="raw" banditType="expgreedy" hyper="0.5").swf
-$(< type="simulated" strategy="bandit-onpolicy" rewardtype="raw" banditType="expgreedy" hyper="0.2").swf
--t "Random" -t "Full" -t "Noisy" -t "Bandit5" -t "Bandit2"
+-t "Random" -t "Full" -t "Noisy" -t "Bandit"
 -o $(>).cumDiffB
 
 misc/visu/cumobj_diffplot.R
@@ -224,7 +222,7 @@ $(trace=*traces type="cumobj_bandit_diffb" pfam=policyfam_full period=period hyp
 $(trace=*traces type="cumobj_bandit_diff" pfam=policyfam_full period=period hyper=0 ).pdf
 $(trace=*traces type="mosaic" strategy="bandit-clairvoyant" pfam=policyfam_full period=period hyper=0).pdf
 $(trace=*traces type="mosaic" strategy="bandit-noisy" pfam=policyfam_full period=period  hyper=0).pdf
-$(trace=*traces type="mosaic" strategy="bandit-onpolicy" rewardtype="raw" banditType="expgreedy" pfam=policyfam_full period=period hyper="0.1").pdf
+$(trace=*traces type="mosaic" strategy="bandit-onpolicy" rewardtype="raw" banditType="expgreedy" pfam=policyfam_full period=period hyper="0.5").pdf
 '
 
 #$(trace="l_kth_sp" tracename="KTH-SP2"    type="cumobj_bandit_diffb" pfam=policyfam_full period=86400 hyper=0 ).pdf
