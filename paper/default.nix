@@ -28,17 +28,24 @@ texFunctions.runLaTeX {
     ;
   };
   extraFiles = [
-    figures/ctc_sp.pdf
-    figures/kth_sp.pdf
-    figures/sdsc_b.pdf
-    figures/sdsc_s.pdf
-    figures/cea_cu.pdf
-    figures/unilug.pdf
-    figures/anl_in.pdf
-    figures/mosaic_noisy.pdf
-    figures/mosaic_bandit.pdf
-    figures/all.pdf
     figures/acmart.cls
     figures/acmst.bst
+    figures/ANL-Intr.pdf
+    figures/CEA-Curi.pdf
+    figures/CTC-SP2.pdf
+    figures/full-CEA-Curi.pdf
+    figures/full-ANL-Intr.pdf
+    figures/full-CTC-SP2.pdf
+    figures/full-KTH-SP2.pdf
+    figures/full-SDSC-BLU.pdf
+    figures/full-SDSC-SP2.pdf
+    figures/full-UniLu-Ga.pdf
+    figures/KTH-SP2.pdf
+    figures/mosaicbandit-UniLu-Ga.pdf
+    figures/mosaic-UniLu-Ga.pdf
+    figures/SDSC-BLU.pdf
+    figures/SDSC-SP2.pdf
+    figures/UniLu-Ga.pdf
+    figures/variability.pdf
   ];
 }

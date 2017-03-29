@@ -130,7 +130,7 @@ They are based on robust and rather simple policies.
 The management generates a huge amount of data.
 During the last few years, there was an explosion of the number of of works at
 the interface of HPC and bigdata, dealing with learning algorithms
-(including the authors of this paper~\cite{Gaussier2015ImprovingBB}).
+(including the authors of this paper~\cite{learningruntimes}).
 Most of these studies target the process to determine more or less accurately
 the value of some specific key parameters, with the idea of
 learning better estimates should improve the performances of the resource
@@ -474,6 +474,7 @@ This section presents our approach and provides a replicable workflow
 for the interested reader.
 
 \subsubsection{Traces}
+\label{sub:traces}
 
 \begin{table}[ht]
   \centering
@@ -538,6 +539,13 @@ hours, including input preparation and analysis code.
 
 \subsubsection{Resampling}
 
+\begin{figure*}[ht]
+  \centering
+  \includegraphics[scale=0.6]{variability.pdf}
+  \caption{Variability in the weekly average waiting time in the KTH-SP2 trace (pre-processing described in subsection~\ref{sub:traces}) for a few policies.}
+  \label{fig:mosn}
+\end{figure*}
+
 %Validating algorithms on real data is a notoriously hard
 %problem~\cite{feitbook}. The case of batch scheduling is made especially
 %difficult by the fluctuations in commonly used metrics~\cite{jsm}. Indeed, the
@@ -576,46 +584,51 @@ via Nix~\cite{nix} and we invite the reader to replicate the results.
 \subsection{Results}
 \label{sub:results}
 
-\begin{figure*}[ht]
+\begin{figure*}[h]
   \centering
-  \includegraphics[scale=0.6]{ctc_sp.pdf}
-  \includegraphics[scale=0.6]{kth_sp.pdf}\\
-  \includegraphics[scale=0.6]{sdsc_s.pdf}
-  \includegraphics[scale=0.6]{sdsc_b.pdf}\\
-  \includegraphics[scale=0.6]{anl_in.pdf}
-  \includegraphics[scale=0.6]{unilug.pdf}
+  \includegraphics[scale=0.6]{full-CTC-SP2.pdf}
+  \includegraphics[scale=0.6]{full-KTH-SP2.pdf}\\
+  \includegraphics[scale=0.6]{full-CEA-Curi.pdf}
+  \includegraphics[scale=0.6]{full-SDSC-BLU.pdf}\\
+  \includegraphics[scale=0.6]{full-SDSC-SP2.pdf}
+  \includegraphics[scale=0.6]{full-ANL-Intr.pdf}
 
   \caption{Evolution of the average cumulative waiting time improvement
     compared to EASY-FCFS of the FullFeedback, NoisyFeedback and EpsilonGreedy
     policies. The average is obtained by resampling the original trace 100
     times. The dashed lines represent the 10th and 90th percentiles of the
   values across this resampling. Each figure is a different trace, and this
-figure is followed-up in figure~\ref{fig:follow} for the CEA-Curie log.}
+figure is followed-up in figure~\ref{fig:follow} for the UniLu-Gaia log.}
 
   \label{fig:small}
 \end{figure*}
 
-\begin{figure}[H]
+\begin{figure}[ht]
   \centering
-  \includegraphics[scale=0.6]{cea_cu.pdf}
+  \includegraphics[scale=0.6]{full-UniLu-Ga.pdf}
 
-  \caption{Follow-up from figure~\ref{fig:small}, plot for the CEA-Curie log.}
+  \caption{Follow-up from figure~\ref{fig:small}, plot for the UniLu-Gaia log.}
 
   \label{fig:follow}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.6]{all.pdf}
-  \caption{Share of the policies chosen by the Noisy policy. The average
-  choice is obtained by resampling the original trace 100 times and
-  aggregating by date.}
+  \includegraphics[scale=0.6]{UniLu-Ga.pdf}
+
+  \caption{Evolution of the average cumulative waiting time improvement
+    compared to EASY-FCFS of the policies $P_i$ for $i = 1 \ldots 10$. The
+    average is obtained by resampling the original trace 100 times. The dashed
+    lines represent the 10th and 90th percentiles of the values across this
+  resampling. Each figure is a different trace, and this figure is followed-up
+in figure~\ref{fig:follow} for the UniLu-Gaia log.}
+
   \label{fig:all}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.6]{mosaic_bandit.pdf}
+  \includegraphics[scale=0.6]{mosaicbandit-UniLu-Ga.pdf}
   \caption{Share of the policies chosen by Epsilon-Greedy as a function of time.
   The average choice is obtained by resampling the original trace 100 times and
   aggregating by date.}
@@ -624,7 +637,7 @@ figure is followed-up in figure~\ref{fig:follow} for the CEA-Curie log.}
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[scale=0.6]{mosaic_noisy.pdf}
+  \includegraphics[scale=0.6]{mosaic-UniLu-Ga.pdf}
   \caption{Share of the policies chosen by the Noisy policy. The average
   choice is obtained by resampling the original trace 100 times and
   aggregating by date.}
