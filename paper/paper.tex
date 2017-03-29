@@ -74,7 +74,6 @@
   \country{France}}
 \email{denis.trystram@imag.fr}
 
-
 \begin{abstract}
 
   The EASY-FCFS heuristic is the basic building block of job scheduling
@@ -194,7 +193,7 @@ use collaborative filtering to colocate tasks in clouds by estimating
 application interference~\cite{7516031}.  Others are closer to the application
 level and use binary classification to distinguish benign memory faults from
 application errors in order to execute recovery algorithms (see
-~\cite{fmodeling} for instance). 
+~\cite{fmodeling} for instance).
 
 
 Several works take a similar approach in the context of HPC, in
@@ -392,7 +391,7 @@ Algorithm~\ref{alg:EASY} describes the EASY($P,\Theta$) heuristic.
     \\ \textit{Backfilling jobs}
     \FOR {job $j'$ in $Q\setminus\{j\}$}
     \IF {$j'$ can be started without delaying the reservation on $j$.}
-    \STATE Pop $j'$ from $Q$ 
+    \STATE Pop $j'$ from $Q$
     \STATE $Start(j')$
     \ENDIF
     \ENDFOR
@@ -499,7 +498,7 @@ for the interested reader.
 The experimental campaign used in this work uses a mixture of small and large
 systems from different periods. Table~\ref{tab:logs} presents the 7 logs, which
 can all be obtained from the Parallel Workload
-Archive~\cite{Feitelson20142967}. We use the 'cleaned'\footnote{\lstinline[basicstyle=\ttfamily\color{blue}]|http://www.cs.huji.ac.il/labs/parallel/workload/logs.html#clean|} version of the logs as 
+Archive~\cite{Feitelson20142967}. We use the 'cleaned'\footnote{\lstinline[basicstyle=\ttfamily\color{blue}]|http://www.cs.huji.ac.il/labs/parallel/workload/logs.html#clean|} version of the logs as
 per the archive. We impose an additional
 filtering step to the workloads\footnote{This filtering step is available in
 the reproducible workflow\cite{repro} as shell script
@@ -538,6 +537,7 @@ simulation campaign presented below is executed on a single Dell PowerEdge R730 
 hours, including input preparation and analysis code.
 
 \subsubsection{Resampling}
+\label{ssub:resampling}
 
 \begin{figure*}[ht]
   \centering
@@ -648,7 +648,7 @@ figure is followed-up in figure~\ref{fig:follow} for the UniLu-Gaia log.}
 
 \begin{acks}
 
-Authors are sorted in alphabetical order. We gracefully thank the contributors
+Authors are sorted in alphabetical order. We warmly thank Pierre Neyron for help with the experiments. We gracefully thank the contributors
 of the Parallel Workloads Archive, Victor Hazlewood (SDSC SP2), Travis Earheart
 and Nancy Wilkins-Diehr (SDSC Blue), Lars Malinowsky (KTH SP2), Dan Dwyer and
 Steve Hotovy (CTC SP2), Joseph Emeras (CEA Curie and UniLu Gaia), Susan
@@ -672,22 +672,63 @@ LIG\footnote{http://www.liglab.fr} and Inria\footnote{http://www.inria.fr}.
 \clearpage
 \section*{Artifacts Description}
 
-We develop a lightweight simulator~\cite{ocst} and an accompanying multi-armed
-bandit library~\cite{obandit}. Both are made available under the ISC~\cite{isc}
-license and released as persistent Zenodo~\cite{zenodo} archives. Additionally,
-we provide a workflow written in the zymake~\cite{breck2008zymake} format that
-is able to generate all the figures from this paper and its annexes. All these
-parts and their dependencies are packaged via Nix~\cite{nix} expressions.
-to use the
-archive at~\cite{repro} on any linux system equipped with the Nix package manager.
-Generating the figures is done with:
+In this annex, we describe the computational artifacts associated with this
+work. We take a lightweight approach to replicability by packaging a workflow
+that generates all the figures from this paper and making it available
+publicly. Moreover, questions regarding replication can be freely directed at
+the authors via e-mail.
+
+All the code associated with this work is released under the ~\cite{ISC}
+license as a persistent Zenodo~\cite{zenodo} archive at~\cite{zenodomain}.
+
+\subsection{Packaging and Replicability}
+
+There are various approaches for making computational experiments replicable,
+among which distributing complete operating system images, containers, or
+packaging software. As our experiments are CPU bound, we decide to opt for the
+software packaging approach using the Nix~\cite{nix} packaging system.  All the
+dependencies of our experiments (including our own code, dependencies for data
+processing and visualization and workflow engine) are automatically managed by
+Nix up to the actual execution of the code.
+
+Running the experiments can be done on any platform equipped with the nix
+workflow system by running:
 
 \begin{lstlisting}
-wget ".." -o banditeasy.tgz
-tar -vzf banditeasy.tgz
-cd banditeasy
-nix-build
+nix-build (fetchTarball ...) -A banditSelection
 \end{lstlisting}
 
+\subsection{Testbed}
 
+ The experiments in this paper can run via in less than 24 hours on a large
+ machine. More precisely, we had access to a Dell PowerEdge R730 equipped with
+ a total of 56 threads @2.4GHz each and 757G of RAM.  For this reason, the
+ experimental campaign was designed to be executed on a single host.
+
+ \subsection{Workflow}
+
+ All experiments are tied together using Zymake~\cite{zymake}, a minimalistic
+ workflow system designed for computational experiments. This system is
+ analogous to a traditional build system with added workflow capabilities. The
+ entire workflow that generates this article from the input data is contained
+ in a single \lstinline[basicstyle=\ttfamily\color{blue}]|zymakefile| to be
+ found at the root of the main archive. This workfloww is composed of the
+ following steps:
+
+ \begin{itemize}
+
+   \item[Preprocessing]: Data extraction from archives, filtering, resampling.
+     This is principally using shell scripts for data manipulation (see file
+     \lstinline[basicstyle=\ttfamily\color{blue}]|misc/strong\_filter| for the
+     filtering steps used) and ocaml code that implements the resampling method
+     described in~\ref{sub:resampling}.
+
+   \item[Simulation]: This step runs the lightweight ocaml backfilling
+     simulator specially written for this work. This simulator is made
+     available under the ISC~\cite{ISC} license both as a persistent Zenodo
+     archive at~\cite{ocst} and as a git repository at ~\cite{ocstgit}.
+
+   \item[Analysis]: This step runs mostly R code that generates the figures
+     presented in this paper.
+ \end{itemize}
 \end{document}
