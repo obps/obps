@@ -16,11 +16,11 @@ period = 86400
 
 threshold = 200000
 
-metaids = $(range 1 10)
+metaids = $(range 1 2)
 
-strids = $(range 1 5)
+strids = $(range 1 2)
 
-sfsids = $(range 1 20)
+sfsids = $(range 1 2)
 
 back = sqf
 
