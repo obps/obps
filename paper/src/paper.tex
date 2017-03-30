@@ -766,7 +766,7 @@ actual execution of the code.
   \item {\bf hardware: Dell PowerEdge R730}
   \item {\bf output: Files}
   \item {\bf experiment workflow: \lstinline[basicstyle=\ttfamily\color{blue}]|zymakefile|, see below}
-  \item {\bf publicly available?: Yes}
+  \item {\bf publicly available?: Open-Sourced under the ISC~\cite{isc} license.}
 \end{itemize}
 }
 
@@ -796,19 +796,51 @@ nix-build (fetchTarball ...)
  this reason, the experimental campaign workflow was designed to be executed on
  a single host.
 
-
 \subsubsection{Software dependencies}
 
-All the software dependencies of our code
-Managed by Nix.
+All the software dependencies of our experiments are automatically managed by Nix.
 
 \subsubsection{Datasets}
 
-From Swf Archive. Cached.
+All data from this paper was obtained from the Swf Parallel Workloads
+Archive~\cite{Feitelson20142967}. The data is cached in gzipped format in the
+persistent archive associated with this workflow, should the Parallel
+Workdloads Archive become unavailable.
 
 \subsection{Installation}
 
-nix-build
+The experiment dependencies are loaded into the environment by the
+\lstinline[basicstyle=\ttfamily]|nix-build| command.
+
+Nevertheless, the reader interested in using the tools outside the workflow can
+obtain an environment by running the
+\lstinline[basicstyle=\ttfamily]|nix-shell| command:
+
+\begin{lstlisting}
+nix-shell (fetchTarball ...)
+\end{lstlisting}
+
+Or alternatively, if the user is at the root of the extracted archive:
+
+\begin{lstlisting}
+nix-shell -A banditSelection
+\end{lstlisting}
+
+This allows to use the following command-line tools:
+
+\begin{itemize}
+
+  \item[ocs] The scheduling simulator used in the experiments. Use
+    \lstinline[basicstyle=\ttfamily]|ocs --help| to see all available options.
+
+  \item[ocs-sampler] The workload resampler used in the experiments. Use
+    \lstinline[basicstyle=\ttfamily]|ocs-sampler --help| for usage.
+
+  \item[zymake] The zymake~\cite{zymake} tool.
+    The workflow can be executed in the current environment in parallel
+    via \lstinline[basicstyle=\ttfamily]|zymake -l localhost zymakefile|.
+
+\end{itemize}
 
 \subsection{Experiment workflow}
 
@@ -840,34 +872,39 @@ nix-build
 
 \subsection{Evaluation and expected result}
 
-o/zymakefile/pdfs
+All resulting figures will be situated in the simlinked folder named
+\lstinline[basicstyle=\ttfamily\color{blue}]|result| positionned at the root of
+the archive.
 
 \subsection{Experiment customization}
 
 Readers interested with modifying the experiments can obtain the zenodo archive at \url{https://...}
 
+The experiments are replicated with the same procedure as before, this time invoking
+the build command with the local folder:
+
+\begin{lstlisting}
+nix-build -A banditSelection
+\end{lstlisting}
+
 The file tree has the following structure:
 
 \dirtree{%
   .1 root .
-.2 zymakefile \textcolor{orange}{The workflow description} .
-.2 default.nix .
-.2 pkgs .
-.2 gz .
+.2 zymakefile \textcolor{brown}{Zymake workflow} .
+.2 default.nix \textcolor{brown}{Nix packaging} .
+.2 pkgs/ \textcolor{brown}{Nix packaging} .
+.2 gz/ \textcolor{brown}{Data archive} .
 .3 ANL-Intrepid.swf.gz .
-.3 CEA-Curie.swf.gz .
-.3 CTC-SP2.swf.gz .
-.3 KTH-SP2.swf.gz .
-.3 SDSC-BLUE.swf.gz .
-.3 SDSC-SP2.swf.gz .
-.3 UniLu-Gaia.swf.gz .
-.2 misc .
-.3 strongvisu .
-.3 visu .
-.2 ocst .
-.2 paper .
+.3 $\cdots$ .
+.2 misc/ \textcolor{brown}{Visualization and filtering code} .
+.2 ocst/ \textcolor{brown}{Simulator Code} .
+.2 paper/ \textcolor{brown}{This article.} .
 }
 
+Most simple workflow modifications (using different traces, changing the sample
+sizes) can be obtained by modifying the
+\lstinline[basicstyle=\ttfamily\color{blue}]|zymakefile|. For modification
 
 \subsection{Notes}
 This artefact description was prepared according to the guidelines located at \url{http://ctuning.org/ae/submission.html}
