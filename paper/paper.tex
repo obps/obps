@@ -439,16 +439,31 @@ In order to have a more realistic estimate of the behavior of a selection strate
 \subsection{Online policy selection with noisy simulation}
 \label{sub:noisy}
 
-In order to simulate how the simulation strategy for selecting policies would work on non simulated traces, we randomly introduce noise in the estimate of the waiting time defined by Eq.~\ref{eq:cost-exact} by rescaling, either dow or up, the waiting time of jobs obtained by simulation:
+In order to simulate how the simulation strategy for selecting policies would work on non simulated traces, we randomly introduce noise in the estimate of the waiting time defined by Eq.~\ref{eq:cost-exact} by rescaling it, either down or up, for each job:
+%
+\begin{enumerate}
+\item For each job $j$ submitted during $\Delta_t$: $\rho_j \sim U[0.85,1.15]$
+\item Then:
 %
 \begin{equation}
-\label{eq:cost-exact}
-w_{\mbox{noisy}}(t;P_i) = \sum_{j=1}^{l(\Delta_t)} \rho \mbox{Wait}_j^{P_i}
+\label{eq:cost-noisy}
+w_{\mbox{noisy}}(t;P_i) = \sum_{j=1}^{l(\Delta_t)} \rho_j \, \mbox{Wait}_j^{P_i}
 \end{equation}
 %
+\end{enumerate}
+%
+$\rho$ is uniformly sampled in the interval $[0.85,1.15]$, thus adding a +/-15\% noise on the waiting time estimated by the simulator. The overall cost is then defined in the same way as before, leading to:
+%
+\begin{equation}
+\label{eq:tot-cost-noisy}
+w(\rightarrow T;P_i) = \sum_{t=0}^{T-1} \lambda^{T-1-t} w_{\mbox{noisy}}(t;P_i)
+\end{equation}
+%
+Instead of introducing noise in the output of the simulator when selecting the policy, one could have introduced it when generating the execution traces. This would however have prevented us from comparing the exact and noisy selection methods, the first one representing an upper bound on the second one. As we will see in Section~\ref{sec:experiments}, there is little difference between the two selection methods.
 
 \subsection{Bandit policy selection}
 \label{sub:bandit}
+
 When we have only bandit feedback of the accurate simulator.
 We use the epsilon-greedy bandit\ref{alg:epsg}.
 
