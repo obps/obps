@@ -405,32 +405,41 @@ Algorithm~\ref{alg:EASY} describes the EASY($P,\Theta$) heuristic.
 \section{Online tuning}
 \label{sec:online}
 
-We present here the strategies we have retained for selecting a policy. In the remainder, we will refer to the period during which a selected policy is applied as the \textit{policy period} and will denote the length of this period as $\Delta$. The time interval is thus divided into periods of equal length: $\Delta_0, \cdots, \Delta_T$, where $T$ is the index of the current policy period; all periods have length $\Delta$. At the beginning of each period, from the first period $\Delta_0$ to the current period $\Delta_T$, a new policy is selected. We rely here on three different strategies for this selection: complete simulation, noisy simulation, $\epsilon$-greedy bandit exploration. All these strategies are applied online.
+We present here the strategies we have retained for selecting a policy. In the remainder, we will refer to the period during which a selected policy is applied as the \textit{policy period} and will denote the length of this period as $\Delta$. The time interval is thus divided into periods of equal length: $\Delta_0, \cdots, \Delta_T$, where $T$ is the index of the current policy period; all periods have length $\Delta$. At the beginning of each period, from the first period $\Delta_0$ to the current period $\Delta_T$, a new policy is selected. 
 
-\subsection{Online policy selection with complete simulation}
+We assume here that there is a certain regularity among periods, \textit{i.e.} that the distributions underlying the jobs submitted do not radically differ between consecutive periods. This assumption is validated in the study presented in~\ref{???}. It further entails that the behavior of a policy on the previous periods reflects its behavior on the current one, so that the selection of a policy can be based on its behavior on previous periods. However, there usually is an important variability on the cost metric between different periods, for any policy. This is illustrated in Figure~\ref{fig:variability} where \textcolor{orange}{???}. When the cost metric is averaged over different periods, there is a tradeoff to find in between longer periods that would somehow limit the variability, and shorter ones that yield more values for the estimation.
+
+The selection of a policy is of course reminiscent of reinforcement learning. It is important to note, however, that a pure reinforcement learning approach is difficult to develop in our context as \textcolor{orange}{???}. We rely here on simpler, yet we believe more effective, strategies to solve this problem. These strategies are applied online and rely on exact simulation, noisy simulation and $\epsilon$-greedy bandit exploration.
+
+\subsection{Online policy selection with exact simulation}
 \label{sub:feedback}
 
 Several simulators have been developed for "playing" reordering policies on a given set of jobs. Such simulations are interesting inasmuch as they provide an estimate of the cost of a given policy on a set of jobs. \textcolor{orange}{TO BE COMPLETED}
 
-We further assume here that there is a certain regularity among periods, \textit{i.e.} that the jobs submitted between consecutive periods do not differ radically. This assumption underlies ??? and is of course all the more true than the policy period considered is not too long. It further entails that the behavior of a policy on the previous periods, in particular on the most recent ones, reflects its behavior on the current one. One can thus base the selection of a policy on its behavior on previous periods, as proposed below.
-
-Let $l(\Delta_t)$ denote the number of jobs \textcolor{orange}{submitted?, finished?} during the period $\Delta_t$ ($0 \le t < T$), and $P_i$ ($1 \le i \le 12$) one reordering policy (defined in Section~\ref{subsec:policies}). The cost of policy$P_i$ during the period $\Delta_t$ is defined as:
-%
-\[
-w_t(P_i) = \sum_{j=1}^{l(\Delta_t)} Wait_j^{P_i}
-\]
-%
-where $Wait_j^{P_i}$ denotes the waiting time for job $j$ according to policy $P_i$. The estimation of the cost of a policy over all the periods preceding the current period can then be defined as:
+Let $l(\Delta_t)$ denote the number of jobs \textit{submitted} during the period $\Delta_t$ ($0 \le t < T$), and $P_i$ ($1 \le i \le 10$) one reordering policy (defined in Section~\ref{subsec:policies}). The cost of policy $P_i$ during the period $\Delta_t$ is defined as:
 %
 \begin{equation}
-w(P_i) = \frac{1}{T} \sum_{t=0}^{T-1} (\frac{l(\Delta_t)}{\sum_{t=0}^{T-1}l(\Delta_t)})^{\alpha}  \lambda^{T-1-t} w_t(P_i)
+\label{eq:cost-exact}
+w_{\mbox{exact}}(t;P_i) = \sum_{j=1}^{l(\Delta_t)} \mbox{Wait}_j^{P_i}
 \end{equation}
 %
-where $\lambda$ is a decay parameter that privileges recent periods. The fraction $l(\Delta_t)/\sum_{t=0}^{T-1}l(\Delta_t)$ allows to balance the periods according to their importance in terms of the number of jobs considered during the period, so as to penalize the influence of "small" periods wrt to "large" ones. The parameter $\alpha \in [0,1]$ serves here to control this balance (for $\alpha=0$ large and small periods are considered equal whereas for $\alpha=1$ small periods are penalized).
+where $\mbox{Wait}_j^{P_i}$ denotes the estimate provided by the simulator of the waiting time for job $j$ according to policy $P_i$. The estimation of the cost of a policy over all the periods preceding the current period can then be defined as:
+%
+\begin{equation}
+\label{eq:tot-cost-exact}
+w(\rightarrow T;P_i) = \sum_{t=0}^{T-1} \lambda^{T-1-t} w_{\mbox{exact}}(t;P_i)
+\end{equation}
+%
+$\lambda \in [0,1]$ is a decay parameter that can be used to privilege recent history (\textit{i.e.} recent periods). Note that the above cost directly corresponds to the cumulative waiting time of the policy over the preceding periods (more precisely to the cumulative simulated estimate of the waiting time of the policy over the preceding periods) so that the length of the period has no impact here.
 
-\subsection{Online policy selection with noisy rewards}
+In the context of this study, as detailed in Section~\ref{sec:experiments}, we rely on metrics averaged over several execution traces in order to obtain reliable estimate of the behavior of different policies and policy selection strategies. Such traces are typically obtained by simulation. Using the same simulator for generating the traces and estimating the cost as defined in Eqs \ref{eq:cost-exact} and \ref{eq:tot-cost-exact} would however be too optimistic and would represent an upper bound on what can be achieved by a selection strategy based on simulation.
+
+In order to have a more realistic estimate of the behavior of a selection strategy based on simulation, we introduce noise in the simulator, as described below.
+
+\subsection{Online policy selection with noisy simulation}
 \label{sub:noisy}
-When we have an noisy simulator.
+
+In order to simulate how the simulation strategy for selecting policies would work on non simulated traces, we randomly introduce noise in the estimate of the waiting time defined by Eq.~\ref{eq:cost-exact}
 
 \subsection{Bandit policy selection}
 \label{sub:bandit}
@@ -541,7 +550,7 @@ hours, including input preparation and analysis code.
 
 \begin{figure*}[ht]
   \centering
-  \includegraphics[scale=0.6]{variability.pdf}
+  \includegraphics[scale=0.6]{figures/variability.pdf}
   \caption{Variability in the weekly average waiting time in the KTH-SP2 trace (pre-processing described in subsection~\ref{sub:traces}) for a few policies.}
   \label{fig:mosn}
 \end{figure*}
@@ -586,12 +595,12 @@ via Nix~\cite{nix} and we invite the reader to replicate the results.
 
 \begin{figure*}[h]
   \centering
-  \includegraphics[scale=0.6]{CTC-SP2.pdf}
-  \includegraphics[scale=0.6]{KTH-SP2.pdf}\\
-  \includegraphics[scale=0.6]{CEA-Curi.pdf}
-  \includegraphics[scale=0.6]{SDSC-BLU.pdf}\\
-  \includegraphics[scale=0.6]{SDSC-SP2.pdf}
-  \includegraphics[scale=0.6]{ANL-Intr.pdf}
+  \includegraphics[scale=0.6]{figures/CTC-SP2.pdf}
+  \includegraphics[scale=0.6]{figures/KTH-SP2.pdf}\\
+  \includegraphics[scale=0.6]{figures/CEA-Curi.pdf}
+  \includegraphics[scale=0.6]{figures/SDSC-BLU.pdf}\\
+  \includegraphics[scale=0.6]{figures/SDSC-SP2.pdf}
+  \includegraphics[scale=0.6]{figures/ANL-Intr.pdf}
 
   \caption{Evolution of the average cumulative waiting time improvement
     compared to EASY-FCFS of the FullFeedback, NoisyFeedback and EpsilonGreedy
@@ -605,7 +614,7 @@ figure is followed-up in figure~\ref{fig:follow} for the UniLu-Gaia log.}
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[scale=0.6]{UniLu-Ga.pdf}
+  \includegraphics[scale=0.6]{figures/UniLu-Ga.pdf}
 
   \caption{Follow-up from figure~\ref{fig:small}, plot for the UniLu-Gaia log.}
 
@@ -614,7 +623,7 @@ figure is followed-up in figure~\ref{fig:follow} for the UniLu-Gaia log.}
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[scale=0.6]{full-UniLu-Ga.pdf}
+  \includegraphics[scale=0.6]{figures/full-UniLu-Ga.pdf}
 
   \caption{Evolution of the average cumulative waiting time improvement
     compared to EASY-FCFS of the policies $P_i$ for $i = 1 \ldots 10$ on the
@@ -628,7 +637,7 @@ figure is followed-up in figure~\ref{fig:follow} for the UniLu-Gaia log.}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.6]{mosaicbandit-UniLu-Ga.pdf}
+  \includegraphics[scale=0.6]{figures/mosaicbandit-UniLu-Ga.pdf}
   \caption{Share of the policies chosen by Epsilon-Greedy as a function of time.
   The average choice is obtained by resampling the original trace 100 times and
   aggregating by date.}
@@ -637,7 +646,7 @@ figure is followed-up in figure~\ref{fig:follow} for the UniLu-Gaia log.}
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[scale=0.6]{mosaic-UniLu-Ga.pdf}
+  \includegraphics[scale=0.6]{figures/mosaic-UniLu-Ga.pdf}
   \caption{Share of the policies chosen by the Noisy policy. The average
   choice is obtained by resampling the original trace 100 times and
   aggregating by date.}
