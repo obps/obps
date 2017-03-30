@@ -95,143 +95,187 @@
 
 \maketitle
 
+
 \section{Introduction}
 \label{sec:intro}
 
-Plan :
-\begin{itemize}
-\item Context - message : les machines sont de + en + complexes, les systemes
-de management restent rudimentaires face a la complexite croissante de
-l'architecture et des applications.
-\item les habitudes et usages existants : justification du FCFS-EASY-BF,
-developper rapidement ce qui existe
-\item ce que l'on propose
-\end{itemize}
+\subsection{Context}
 
-
-Providing the computing infrastuctures needed to solve actual complex problems
-arising in the various fields of the modern society (including climate change,
-health, green energy or security) is a strategic challenge.
-In particular, High Performance Computing (HPC) systems are evolving to
-extreme-scale parallel and distributed platforms.
-The race for always more computing power and storage capacity does not only
-lead to sophisticated specific exascale platforms, but the objective of the
-community is to design efficient sustained Petascale platforms.
-However, there is still a long way to go and many scientific and technical
-problems to solve by the system management software in order to adapt to such
-large-scale evolution and the increasing complexity
+Providing the computing infrastuctures needed to solve actual complex 
+problems arising in the various fields of the modern society (including 
+climate change, health, green energy or security) is a strategic challenge.
+The main pillar to address this challenge is to build extreme-scale 
+parallel and distributed platforms.
+The race for always more computing power and storage capacity does not 
+only lead to sophisticated specific exascale platforms, but the 
+objective of the community is to design efficient sustained Petascale 
+platforms.
+However, there is still a long way to go and many scientific and 
+technical problems to solve by the system management software in order 
+to adapt to such large-scale evolution and the increasing complexity
 in both architecture and applications.
-The existing job and resource management sofwares allow to run tens thousands
-jobs on hundreds thousands cores.
-They are based on robust and rather simple policies.
+The existing job and resource management softwares allow to run tens 
+thousands jobs on hundreds thousands cores.
+They are based on robust policies, however, despite their positive 
+properties of relative simplicity and their guarantee of no job starvation,
+there is still place for improvements.
+We propose here to study how to tune the classical EASY-BackFilling 
+heuristic using two new learning approaches (namely, .
 
 \bigskip
 The management generates a huge amount of data.
-During the last few years, there was an explosion of the number of of works at
-the interface of HPC and bigdata, dealing with learning algorithms
-(including the authors of this paper~\cite{learningruntimes}).
-Most of these studies target the process to determine more or less accurately
-the value of some specific key parameters, with the idea of
-learning better estimates should improve the performances of the resource
-manager.
+During the last few years, there was an explosion of the number of works 
+at the interface of HPC and BigData, dealing with learning algorithms
+(including the authors of this work~\cite{SC2015}).
+Most of these studies target the process of determining more or less 
+accurately the value of some specific key parameters, with the idea that
+learning better estimates should improve the performances of the 
+resource manager.
 
 \bigskip
-Our idea within this work is to learn how the management system behave within
-the classical framework of of selecting jobs of the submission queue under
-EASY-backfilling.
-Contrarily to most existing studies which consider only one execution trace, we
-extend the learning on a multiple trace basis.
-Indeed, learning for a specific trace leads to limited results, customized for
-one trace on a given platform (what happens if we target another platform?).
-Moreover, this is usually inefficient to deal with extreme unpredictable
-events.
+Our focus within this work is to learn how the management system behaves 
+within the usual framework of selecting jobs of the submission queue 
+under EASY-BF.
+Contrarily to most existing studies, which consider only one execution 
+trace, we extend the learning on a multiple traces basis.
+We built a simulator which generates a huge number of partial executions 
+coming from multiple users collected in various actual traces and HPC 
+platforms.
+The sampling is explained in detail later in the paper.
+This was motivated because learning for a specific trace/platform leads 
+to limited results, customized for one particular instance (then, what 
+happens if we target another platform?).
+The collected data are too small and moreover, this approach is usually 
+inefficient to deal with extreme unpredictable events.
+The sampling generation allow to smooth the data.
+
+%On se place du point de vue de l'admin system...
 
 \subsection{Contributions}
+
+Our main contribution is to investigate a new way for learning, which 
+consists in using of a simulator to generate a large data set extracted 
+from various actual traces.
+We propose two variants of the approach: the ideal situation which 
+relies on the  precise knowledge of data, and the more realistic 
+assumption of noisy data (which better reflect the uncertainties).
+We also propose a new on-line approach based on multi-armed Bandit to 
+learn very fast how to prioritize the submission and BackFilling queues.
+\bigskip
+
+Our main results are:
+
+l'approche basee sur le simulateur marche bien. meme avec des donnes 
+imprecises.
+
+Le bandit a des resultats raisonnables, il ne necessite que peu de code 
+supplementaire...
+
+Dans les details :
+on montre que une gestion aleatoire des queues est meilleure que FCFS, 
+et on identifie des politiques qui marchent bien dans plusieurs traces, 
+etc..
+
 
 \section{Related Works}
 \label{sec:rw}
 
-This section presents related works in the area of scheduling for batch scheduling.
+This section presents and discuss the most significant results related 
+to job scheduling and learning algorithms in this context.
+Let us start by recalling some basics about scheduling heuristics in HPC 
+platforms:
 
-\subsection{Scheduling heuristics in HPC platforms}
-
-While parallel job scheduling is a well studied theoretical
-problem~\cite{leung2004handbook}, the practical ramifications, varying
-hypotheses, and inherent uncertainty of the problem in HPC have driven
-practitioners and researchers alike to use and study simple heuristics.
+While parallel job scheduling is a old studied theoretical
+problem~\cite{leung2004handbook} \texbf{PREFER DROZDOWSKI HERE + SURVEY 
+FEITELSON-RUDOLPH-SWIEGELSHON}, the practical ramifications, varying
+hypotheses, and inherent uncertainty of the problem applied on the HPC 
+field have driven
+practitioners to use \textit{simple} heuristics (and researchers to 
+study their behavior).
 The two most popular heuristics for HPC platforms are EASY~\cite{easy} and
-Conservative~\cite{Mu'alem:2001:UPW:380314.380315} Backfilling.
+Conservative~\cite{Mu'alem:2001:UPW:380314.380315} backfillings.
 
-While Conservative Backfilling offers many advantages~\cite{bfchar}, it has a
-significant computational overhead, perhaps explaining why most of the machines
-of the top500 ranking~\cite{top500} still use at the time of this publication a
-variant of EASY Backfilling.
-
-\subsection{EASY}
-There is a large body of work seeking to improve EASY. Indeed, while the
-heuristic is used by various resource and job management softwares (most notably
-SLURM~\cite{SLURMdocSCHED}), this is rarely done without fine tunings by system
+While Conservative Backfilling offers many advantages~\cite{bfchar}, it 
+has a
+significant computational overhead, which mainly explains why most of 
+the machines
+of the top500 ranking~\cite{top500} rather use a variant of EASY-BF 
+instead.
+There is a large body of work seeking to improve/tune EASY. Indeed, 
+while the
+basic mechanism is used by some actual resource and job management 
+softwares (most notably
+SLURM~\cite{SLURMdocSCHED}), this is rarely done without fine tunings by 
+system
 administrators.
 
+The original EASY mechanism refers to a First-Come-First-Serve basis.
 Several works explore how to tune EASY by reordering waiting
 and/or backfilling queues~\cite{Tsafrir_easypp_2005}, sometimes even in a
 randomized manner~\cite{1592720}, as well as some
-implementations~\cite{Jackson2001}. However, as successful as they may be, these works
-do not address the dependency~\cite{variability} of scheduling metrics on the
-workload. Indeed these studies most often report \textit{post-hoc} performance since
+implementations~\cite{Jackson2001}. However, as successful as they may 
+be, these works
+do not address the dependency of scheduling metrics on the
+workload~\cite{variability}. Indeed these studies most often report 
+\textit{post-hoc} performance since
 they compare algorithms after the workload is known.
 
 The dynP scheduler~\cite{streit_selftuning_2002} proposes a systematic
-method to tuning these queues, although it requires simulated scheduling runs
-at decision time and therefore costs much more than the natural execution of EASY.
+method to tuning these queues, although it requires simulated scheduling 
+runs
+at decision time and therefore, it costs much more than the natural 
+execution of EASY.
 
-\subsection{Data-aware resource management}
+\paragraph
+\textbf{Data-aware resource management.}
 
-There is a recent focus on leveraging the high amount of data available in
+There was a recent focus on leveraging the huge amount of data available in
 large scale computing systems in order to improve their behavior. Some works
 use collaborative filtering to colocate tasks in clouds by estimating
-application interference~\cite{7516031}.  Others are closer to the application
+application interference~\cite{7516031}.  Some others are closer to the 
+application
 level and use binary classification to distinguish benign memory faults from
-application errors in order to execute recovery algorithms (see
-~\cite{fmodeling} for instance).
+application errors in order to execute recovery algorithms 
+(see~\cite{fmodeling} for instance).
 
-
-Several works take a similar approach in the context of HPC, in
-particular~\cite{Tsafrir_easypp_2005,learningruntimes}, hoping that better job
+Several works use \textbf{this method} (LAQUELLE?) in the context of HPC, in
+particular~\cite{Tsafrir_easypp_2005,learningruntimes}, hoping that 
+better job
 runtime estimations should improve the scheduling~\cite{chiang_impact_2002}.
 Some algorithms estimate runtime distributions model and choose jobs using
 probabilistic integration procedures~\cite{Nissimov2008}.
-
 However, these works do not address the duality between the cumulative and
-maximal scheduling costs, as mentionned in~\cite{learningruntimes}.
+maximal scheduling costs, as mentioned in~\cite{learningruntimes}.
+While these previous works intend to estimate uncertain parameters, we 
+consider here a more
+pragmatic approach, which directly learn a good scheduling policy from a 
+given policy space.
 
-A recent work~\cite{mlmem} proposes to help
-users specify better memory requirements by applying supervised learning
-techniques to job metadata.
-
-While these previous works intend to estimate uncertain parameters, they lack
-in validating the impact on the system. We consider in this paper a more
-pragmatic approach, which is to directly learn a scheduling policy from a given
-seach space.
-
-\subsection{Multi-Armed Bandits}
+\paragraph
+\textbf{Multi-Armed Bandits.}
 
 A multi-armed bandit (MAB) problem is a sequential allocation problem with
-partially observable rewards. At every round, an action (an arm) must be chosen
+partially observable rewards. At every round, an action (represented by 
+an arm of the Bandit) must be chosen
 in a fixed set and the corresponding reward is observed. The goal of a MAB
-algorithm is to maximize the total reward obtained in a number of rounds.
-There are a number of works that address this problem under a variety of
-constraints, The two most popular settings are the original stochastic  case,
-and the adversarial case. See ~\cite{thompson} for the original work on the
-stochastic case and ~\cite{Auer2002} for the UCB family of algorithms. The work
-of ~\cite{Banos} is the earliest known work to us for the adversarial case
+algorithm is to maximize the total reward obtained in a successive 
+number of rounds.
+There exist a bunch of works that address this problem under a variety of
+constraints, The two most popular settings are the original stochastic  case
+and the adversarial case. See~\cite{thompson} for the original work on the
+stochastic case and~\cite{Auer2002} for the UCB family of algorithms 
+\textbf{EXPLAIN HERE THE ACRONYM}.
+According to our knowledge, the work
+of~\cite{Banos} is the earliest known work to us for the adversarial case
 see~\cite{nonstoch} for the EXP family of algorithms. We refer to the
 review~\cite{bubnow} for a comprehensive overview of the field. While these
 algorithms bound the cumulative difference in loss to the best arm (the
-regret), they have functional constraits such as the fact that the rewards
-should be contained in a range. The\cite{Auer2002} heuristic called
-Epsilon-Greedy is known to achieve good results in practice, and does not have
+regret), they have functional constraints such as the fact that the rewards
+should be contained in a range. The heuristic called
+\textit{Epsilon-Greedy} introduced in~\cite{Auer2002} is known to 
+achieve good results in practice, and does not have
 this requirement.
+
 
 \section{Problem setting}
 \label{sec:problem_setting}
@@ -338,10 +382,10 @@ reorder it at will. We settle on a reasonable search space of 10 reordering poli
 \begin{enumerate}
   \item FCFS: First-Come First-Serve, which is the widely used default policy~\cite{easy}.
   \item LCFS: Last-Come First-Serve.
-  %\item SPF: Smallest estimated Processing time $\widetilde{p_{j}}$ First ~\cite{bfchar}.
+  \item SPF: Smallest estimated Processing time $\widetilde{p_{j}}$ First ~\cite{bfchar}.
   \item LPF: Longest estimated Processing time First.
   \item LQF: Largest resource requirement $q_j$ First.
-  %\item SQF: Smallest resource requirement First.
+  \item SQF: Smallest resource requirement First.
   \item LEXP: Largest Expansion Factor First~\cite{bfchar}, where the expansion
     factor is defined as follows:
   \begin{equation} \frac{start_j - r_j + \widetilde{p_j}}{\widetilde{p_j}} \end{equation}
@@ -350,7 +394,7 @@ reorder it at will. We settle on a reasonable search space of 10 reordering poli
   \item LRF: Largest Ratio $\frac{p_j}{q_j}$ First
   \item SRF: Smallest Ratio First
   \item LAF: Largest Area $ p_j \times q_j$ First
-  %\item SAF: Smallest Area First
+  \item SAF: Smallest Area First
 \end{enumerate}
 
 This search space is designed with the goal of being as semantically diverse as
@@ -542,8 +586,9 @@ hours, including input preparation and analysis code.
 \begin{figure*}[ht]
   \centering
   \includegraphics[scale=0.6]{variability.pdf}
-  \caption{Variability in the weekly average waiting time in the KTH-SP2 trace (pre-processing described in subsection~\ref{sub:traces}) for a few policies.}
-  \label{fig:mosn}
+  \caption{Variability in the weekly average waiting time of EASY($P,20h$) using the KTH-SP2 trace (pre-processing described in subsection~\ref{sub:traces}) for
+  a few select policies from~\ref{sub:th}.}
+  \label{fig:variability}
 \end{figure*}
 
 %Validating algorithms on real data is a notoriously hard
@@ -576,10 +621,9 @@ identically distributed process when considering sufficiently time spaced weeks.
 
 Readers interested in replicating the experiments (or a part thereof) are
 invited to peruse to the 'artifacts description' appendix of this paper.  We
-provide to persistent archives containing the simulator used, the analysis code
-and the associated workflow necessary to replicate all experiments and figures
-present in this paper. All these parts's dependencies are automatically managed
-via Nix~\cite{nix} and we invite the reader to replicate the results.
+provide to persistent archives containing the simulator, the analysis code
+and an automated workflow that replicates all experiments and figures
+present in this paper.
 
 \subsection{Results}
 \label{sub:results}
@@ -671,11 +715,12 @@ LIG\footnote{http://www.liglab.fr} and Inria\footnote{http://www.inria.fr}.
 \bibliography{bibliography}
 
 \clearpage
-\section*{Artifacts Description}
 
-In this annex, we describe the computational artifacts associated with this
-work. We take a lightweight approach to replicability by packaging a workflow
-that generates all the figures from this paper and making it available
+\section*{Artifacts Description Appendix}
+
+This appendix describes the computational artifacts associated with this work. We
+take a lightweight approach to replicability by packaging a declarative
+workflow that generates all the figures from this paper and making it available
 publicly. Moreover, questions regarding replication can be freely directed at
 the authors via e-mail.
 
@@ -687,49 +732,51 @@ license as a persistent Zenodo~\cite{zenodo} archive at~\cite{zenodomain}.
 There are various approaches for making computational experiments replicable,
 among which distributing complete operating system images, containers, or
 packaging software. As our experiments are CPU bound, we decide to opt for the
-software packaging approach using the Nix~\cite{nix} packaging system.  All the
-dependencies of our experiments (including our own code, dependencies for data
-processing and visualization and workflow engine) are automatically managed by
-Nix up to the actual execution of the code.
+software packaging approach using the Nix~\cite{nix} packaging system. This
+allows for replicating the experiments on clusters where virtualization is not
+available or kernels are old and decreases runtime. All the dependencies of our
+experiments (including our own code, dependencies for data processing and
+visualization and workflow engine) are automatically managed by Nix up to the
+actual execution of the code.
 
 Running the experiments can be done on any platform equipped with the nix
-workflow system by running:
+package manager by running:
 
 \begin{lstlisting}
-nix-build (fetchTarball ...) -A banditSelection
+nix-build (fetchTarball ...)
 \end{lstlisting}
 
 \subsection{Testbed}
 
- The experiments in this paper can run via in less than 24 hours on a large
- machine. More precisely, we had access to a Dell PowerEdge R730 equipped with
- a total of 56 threads @2.4GHz each and 757G of RAM.  For this reason, the
- experimental campaign was designed to be executed on a single host.
+ The experiments in this paper can run via in less than 24 hours on a moderately parallel
+ host. More precisely, we had access to a Dell PowerEdge R730 equipped with
+ a total of 56 threads @2.4GHz each and 757G of RAM. For this reason, the
+ experimental campaign workflow was designed to be executed on a single host.
 
  \subsection{Workflow}
 
  All experiments are tied together using Zymake~\cite{zymake}, a minimalistic
- workflow system designed for computational experiments. This system is
+ workflow system designed for computational experiments\footnote{The zymake system
+ is also packaged by our Nix expressions.}. This system is
  analogous to a traditional build system with added workflow capabilities. The
  entire workflow that generates this article from the input data is contained
  in a single \lstinline[basicstyle=\ttfamily\color{blue}]|zymakefile| to be
- found at the root of the main archive. This workfloww is composed of the
+ found at the root of the main archive. This workflow is composed of the
  following steps:
 
  \begin{itemize}
-
    \item[Preprocessing]: Data extraction from archives, filtering, resampling.
      This is principally using shell scripts for data manipulation (see file
      \lstinline[basicstyle=\ttfamily\color{blue}]|misc/strong\_filter| for the
      filtering steps used) and ocaml code that implements the resampling method
-     described in~\ref{sub:resampling}.
+     described in~\ref{ssub:resampling}.
 
    \item[Simulation]: This step runs the lightweight ocaml backfilling
      simulator specially written for this work. This simulator is made
      available under the ISC~\cite{ISC} license both as a persistent Zenodo
      archive at~\cite{ocst} and as a git repository at ~\cite{ocstgit}.
 
-   \item[Analysis]: This step runs mostly R code that generates the figures
+   \item[Analysis]: This step runs R code that generates the figures
      presented in this paper.
  \end{itemize}
 \end{document}
