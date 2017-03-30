@@ -2,6 +2,7 @@
 \setcopyright{rightsretained}
 
 \usepackage{listings}
+\usepackage{dirtree}
 \usepackage{hyperref}
 \usepackage{booktabs}
 \usepackage{url}
@@ -102,51 +103,51 @@
 
 \subsection{Context}
 
-Providing the computing infrastuctures needed to solve actual complex 
-problems arising in the various fields of the modern society (including 
+Providing the computing infrastuctures needed to solve actual complex
+problems arising in the various fields of the modern society (including
 climate change, health, green energy or security) is a strategic challenge.
-The main pillar to address this challenge is to build extreme-scale 
+The main pillar to address this challenge is to build extreme-scale
 parallel and distributed platforms.
-The race for always more computing power and storage capacity does not 
-only lead to sophisticated specific exascale platforms, but the 
-objective of the community is to design efficient sustained Petascale 
+The race for always more computing power and storage capacity does not
+only lead to sophisticated specific exascale platforms, but the
+objective of the community is to design efficient sustained Petascale
 platforms.
-However, there is still a long way to go and many scientific and 
-technical problems to solve by the system management software in order 
+However, there is still a long way to go and many scientific and
+technical problems to solve by the system management software in order
 to adapt to such large-scale evolution and the increasing complexity
 in both architecture and applications.
-The existing job and resource management softwares allow to run tens 
+The existing job and resource management softwares allow to run tens
 thousands jobs on hundreds thousands cores.
-They are based on robust policies, however, despite their positive 
+They are based on robust policies, however, despite their positive
 properties of relative simplicity and their guarantee of no job starvation,
 there is still place for improvements.
-We propose here to study how to tune the classical EASY-BackFilling 
+We propose here to study how to tune the classical EASY-BackFilling
 heuristic using two new learning approaches (namely, .
 
 \bigskip
 The management generates a huge amount of data.
-During the last few years, there was an explosion of the number of works 
+During the last few years, there was an explosion of the number of works
 at the interface of HPC and BigData, dealing with learning algorithms
-(including the authors of this work~\cite{SC2015}).
-Most of these studies target the process of determining more or less 
+(including the authors of this work~\cite{learningruntimes}).
+Most of these studies target the process of determining more or less
 accurately the value of some specific key parameters, with the idea that
-learning better estimates should improve the performances of the 
+learning better estimates should improve the performances of the
 resource manager.
 
 \bigskip
-Our focus within this work is to learn how the management system behaves 
-within the usual framework of selecting jobs of the submission queue 
+Our focus within this work is to learn how the management system behaves
+within the usual framework of selecting jobs of the submission queue
 under EASY-BF.
-Contrarily to most existing studies, which consider only one execution 
+Contrarily to most existing studies, which consider only one execution
 trace, we extend the learning on a multiple traces basis.
-We built a simulator which generates a huge number of partial executions 
-coming from multiple users collected in various actual traces and HPC 
+We built a simulator which generates a huge number of partial executions
+coming from multiple users collected in various actual traces and HPC
 platforms.
 The sampling is explained in detail later in the paper.
-This was motivated because learning for a specific trace/platform leads 
-to limited results, customized for one particular instance (then, what 
+This was motivated because learning for a specific trace/platform leads
+to limited results, customized for one particular instance (then, what
 happens if we target another platform?).
-The collected data are too small and moreover, this approach is usually 
+The collected data are too small and moreover, this approach is usually
 inefficient to deal with extreme unpredictable events.
 The sampling generation allow to smooth the data.
 
@@ -154,59 +155,59 @@ The sampling generation allow to smooth the data.
 
 \subsection{Contributions}
 
-Our main contribution is to investigate a new way for learning, which 
-consists in using of a simulator to generate a large data set extracted 
+Our main contribution is to investigate a new way for learning, which
+consists in using of a simulator to generate a large data set extracted
 from various actual traces.
-We propose two variants of the approach: the ideal situation which 
-relies on the  precise knowledge of data, and the more realistic 
+We propose two variants of the approach: the ideal situation which
+relies on the  precise knowledge of data, and the more realistic
 assumption of noisy data (which better reflect the uncertainties).
-We also propose a new on-line approach based on multi-armed Bandit to 
+We also propose a new on-line approach based on multi-armed Bandit to
 learn very fast how to prioritize the submission and BackFilling queues.
 \bigskip
 
 Our main results are:
 
-l'approche basee sur le simulateur marche bien. meme avec des donnes 
+l'approche basee sur le simulateur marche bien. meme avec des donnes
 imprecises.
 
-Le bandit a des resultats raisonnables, il ne necessite que peu de code 
+Le bandit a des resultats raisonnables, il ne necessite que peu de code
 supplementaire...
 
 Dans les details :
-on montre que une gestion aleatoire des queues est meilleure que FCFS, 
-et on identifie des politiques qui marchent bien dans plusieurs traces, 
+on montre que une gestion aleatoire des queues est meilleure que FCFS,
+et on identifie des politiques qui marchent bien dans plusieurs traces,
 etc..
 
 
 \section{Related Works}
 \label{sec:rw}
 
-This section presents and discuss the most significant results related 
+This section presents and discuss the most significant results related
 to job scheduling and learning algorithms in this context.
-Let us start by recalling some basics about scheduling heuristics in HPC 
+Let us start by recalling some basics about scheduling heuristics in HPC
 platforms:
 
 While parallel job scheduling is a old studied theoretical
-problem~\cite{leung2004handbook} \textbf{PREFER DROZDOWSKI HERE + SURVEY 
+problem~\cite{leung2004handbook} \textbf{PREFER DROZDOWSKI HERE + SURVEY
 FEITELSON-RUDOLPH-SWIEGELSHON}, the practical ramifications, varying
-hypotheses, and inherent uncertainty of the problem applied on the HPC 
+hypotheses, and inherent uncertainty of the problem applied on the HPC
 field have driven
-practitioners to use \textit{simple} heuristics (and researchers to 
+practitioners to use \textit{simple} heuristics (and researchers to
 study their behavior).
 The two most popular heuristics for HPC platforms are EASY~\cite{easy} and
 Conservative~\cite{Mu'alem:2001:UPW:380314.380315} backfillings.
 
-While Conservative Backfilling offers many advantages~\cite{bfchar}, it 
+While Conservative Backfilling offers many advantages~\cite{bfchar}, it
 has a
-significant computational overhead, which mainly explains why most of 
+significant computational overhead, which mainly explains why most of
 the machines
-of the top500 ranking~\cite{top500} rather use a variant of EASY-BF 
+of the top500 ranking~\cite{top500} rather use a variant of EASY-BF
 instead.
-There is a large body of work seeking to improve/tune EASY. Indeed, 
+There is a large body of work seeking to improve/tune EASY. Indeed,
 while the
-basic mechanism is used by some actual resource and job management 
+basic mechanism is used by some actual resource and job management
 softwares (most notably
-SLURM~\cite{SLURMdocSCHED}), this is rarely done without fine tunings by 
+SLURM~\cite{SLURMdocSCHED}), this is rarely done without fine tunings by
 system
 administrators.
 
@@ -214,17 +215,17 @@ The original EASY mechanism refers to a First-Come-First-Serve basis.
 Several works explore how to tune EASY by reordering waiting
 and/or backfilling queues~\cite{Tsafrir_easypp_2005}, sometimes even in a
 randomized manner~\cite{1592720}, as well as some
-implementations~\cite{Jackson2001}. However, as successful as they may 
+implementations~\cite{Jackson2001}. However, as successful as they may
 be, these works
 do not address the dependency of scheduling metrics on the
-workload~\cite{variability}. Indeed these studies most often report 
+workload~\cite{variability}. Indeed these studies most often report
 \textit{post-hoc} performance since
 they compare algorithms after the workload is known.
 
 The dynP scheduler~\cite{streit_selftuning_2002} proposes a systematic
-method to tuning these queues, although it requires simulated scheduling 
+method to tuning these queues, although it requires simulated scheduling
 runs
-at decision time and therefore, it costs much more than the natural 
+at decision time and therefore, it costs much more than the natural
 execution of EASY.
 
 \paragraph
@@ -233,38 +234,37 @@ execution of EASY.
 There was a recent focus on leveraging the huge amount of data available in
 large scale computing systems in order to improve their behavior. Some works
 use collaborative filtering to colocate tasks in clouds by estimating
-application interference~\cite{7516031}.  Some others are closer to the 
-application
-level and use binary classification to distinguish benign memory faults from
-application errors in order to execute recovery algorithms 
+application interference~\cite{7516031}.  Some others are closer to the
+application level and use binary classification to distinguish benign memory
+faults from application errors in order to execute recovery algorithms
 (see~\cite{fmodeling} for instance).
 
 Several works use \textbf{this method} (LAQUELLE?) in the context of HPC, in
-particular~\cite{Tsafrir_easypp_2005,learningruntimes}, hoping that 
+particular~\cite{Tsafrir_easypp_2005,learningruntimes}, hoping that
 better job
 runtime estimations should improve the scheduling~\cite{chiang_impact_2002}.
 Some algorithms estimate runtime distributions model and choose jobs using
 probabilistic integration procedures~\cite{Nissimov2008}.
 However, these works do not address the duality between the cumulative and
 maximal scheduling costs, as mentioned in~\cite{learningruntimes}.
-While these previous works intend to estimate uncertain parameters, we 
+While these previous works intend to estimate uncertain parameters, we
 consider here a more
-pragmatic approach, which directly learn a good scheduling policy from a 
+pragmatic approach, which directly learn a good scheduling policy from a
 given policy space.
 
 \paragraph
 \textbf{Multi-Armed Bandits.}
 
 A multi-armed bandit (MAB) problem is a sequential allocation problem with
-partially observable rewards. At every round, an action (represented by 
+partially observable rewards. At every round, an action (represented by
 an arm of the Bandit) must be chosen
 in a fixed set and the corresponding reward is observed. The goal of a MAB
-algorithm is to maximize the total reward obtained in a successive 
+algorithm is to maximize the total reward obtained in a successive
 number of rounds.
 There exist a bunch of works that address this problem under a variety of
 constraints, The two most popular settings are the original stochastic  case
 and the adversarial case. See~\cite{thompson} for the original work on the
-stochastic case and~\cite{Auer2002} for the UCB family of algorithms 
+stochastic case and~\cite{Auer2002} for the UCB family of algorithms
 \textbf{EXPLAIN HERE THE ACRONYM}.
 According to our knowledge, the work
 of~\cite{Banos} is the earliest known work to us for the adversarial case
@@ -273,7 +273,7 @@ review~\cite{bubnow} for a comprehensive overview of the field. While these
 algorithms bound the cumulative difference in loss to the best arm (the
 regret), they have functional constraints such as the fact that the rewards
 should be contained in a range. The heuristic called
-\textit{Epsilon-Greedy} introduced in~\cite{Auer2002} is known to 
+\textit{Epsilon-Greedy} introduced in~\cite{Auer2002} is known to
 achieve good results in practice, and does not have
 this requirement.
 
@@ -450,7 +450,7 @@ Algorithm~\ref{alg:EASY} describes the EASY($P,\Theta$) heuristic.
 \section{Online tuning}
 \label{sec:online}
 
-We present here the strategies we have retained for selecting a policy. In the remainder, we will refer to the period during which a selected policy is applied as the \textit{policy period} and will denote the length of this period as $\Delta$. The time interval is thus divided into periods of equal length: $\Delta_0, \cdots, \Delta_T$, where $T$ is the index of the current policy period; all periods have length $\Delta$. At the beginning of each period, from the first period $\Delta_0$ to the current period $\Delta_T$, a new policy is selected. 
+We present here the strategies we have retained for selecting a policy. In the remainder, we will refer to the period during which a selected policy is applied as the \textit{policy period} and will denote the length of this period as $\Delta$. The time interval is thus divided into periods of equal length: $\Delta_0, \cdots, \Delta_T$, where $T$ is the index of the current policy period; all periods have length $\Delta$. At the beginning of each period, from the first period $\Delta_0$ to the current period $\Delta_T$, a new policy is selected.
 
 We assume here that there is a certain regularity among periods, \textit{i.e.} that the distributions underlying the jobs submitted do not radically differ between consecutive periods. This assumption is validated in the study presented in~\ref{???}. It further entails that the behavior of a policy on the previous periods reflects its behavior on the current one, so that the selection of a policy can be based on its behavior on previous periods. However, there usually is an important variability on the cost metric between different periods, for any policy. This is illustrated in Figure~\ref{fig:variability} where \textcolor{orange}{???}. When the cost metric is averaged over different periods, there is a tradeoff to find in between longer periods that would somehow limit the variability, and shorter ones that yield more values for the estimation.
 
@@ -487,7 +487,7 @@ In order to have a more realistic estimate of the behavior of a selection strate
 In order to simulate how the simulation strategy for selecting policies would work on non simulated traces, we randomly introduce noise in the estimate of the waiting time defined by Eq.~\ref{eq:cost-exact} by rescaling, either dow or up, the waiting time of jobs obtained by simulation:
 %
 \begin{equation}
-\label{eq:cost-exact}
+\label{eq:cost-noisy}
 w_{\mbox{noisy}}(t;P_i) = \sum_{j=1}^{l(\Delta_t)} \rho \mbox{Wait}_j^{P_i}
 \end{equation}
 %
@@ -718,14 +718,7 @@ Coghlan, Narayan Desay, Wei Tang (ANL Intrepid), and of course Dror Feitelson.
 The Metacentrum workload log was graciously provided by the Czech National Grid
 Infrastructure MetaCentrum. This work has been partially supported by the LabEx
 PERSYVAL-Lab(\grantsponsor{ANR-11-LABX-0025-01}{ANR-11-LABX-0025-01}) funded by
-the French program Investissement d'avenir. Experiments presented in this paper
-were carried out using the Grid'5000 testbed. Grid'5000 is supported by a
-scientific interest group hosted by Inria and including CNRS, RENATER and
-several Universities as well as other
-organizations\footnote{https://www.grid5000.fr}.  Access to the experimental
-machine(s) used in this paper was gracefully granted by research teams from
-LIG\footnote{http://www.liglab.fr} and Inria\footnote{http://www.inria.fr}.
-
+the French program Investissement d'avenir.
 \end{acks}
 
 \bibliographystyle{acmst}
@@ -737,28 +730,29 @@ LIG\footnote{http://www.liglab.fr} and Inria\footnote{http://www.inria.fr}.
 
 \subsection{Abstract}
 
-this appendix describes the computational artifacts associated with this work. we
+This appendix describes the computational artifacts associated with this work. We
 take a lightweight approach to replicability by packaging a declarative
 workflow that generates all the figures from this paper and making it available
-publicly. moreover, questions regarding replication can be freely directed at
+publicly. Moreover, questions regarding replication can be freely directed at
 the authors via e-mail.
 
-all the code associated with this work is released under the ~\cite{isc}
+All the code associated with this work is released under the ~\cite{isc}
 license as a persistent zenodo~\cite{zenodo} archive at~\cite{zenodomain}.
 
 \subsection{Description}
 
 There are various approaches for making computational experiments replicable,
 among which distributing complete operating system images, containers, or
-packaging software. as our experiments are cpu bound, we decide to opt for the
-software packaging approach using the nix~\cite{nix} packaging system. This
-allows for replicating the experiments on clusters where virtualization is not
-available or kernels are old and decreases runtime. all the dependencies of our
+packaging software. As our experiments are cpu bound, we decide to opt for the
+software packaging approach. This allows for replicating the experiments on clusters where virtualization is not
+available or kernels are too old for containers old and decreases runtime.
+
+All the dependencies of our
 experiments (including our own code, dependencies for data processing and
 visualization and workflow engine) are automatically managed by Nix up to the
 actual execution of the code.
 
-\subsubsection{check-list (artifact meta information)}
+\subsubsection{Check-list (artifact meta information)}
 
 {\small
 \begin{itemize}
@@ -787,14 +781,44 @@ nix-build (fetchTarball ...)
 
 \subsubsection{Hardware}
 
- The experiments in this paper can run via in less than 24 hours on a moderately parallel
- host. More precisely, we had access to a Dell PowerEdge R730 equipped with
- a total of 56 threads @2.4GHz each and 757G of RAM. For this reason, the
- experimental campaign workflow was designed to be executed on a single host.
+ Experiments presented in this paper were carried out using the Grid'5000
+ testbed. Grid'5000 is supported by a scientific interest group hosted by Inria
+ and including CNRS, RENATER and several Universities as well as other
+ organizations\footnote{https://www.grid5000.fr}.  Access to the experimental
+ machine(s) used in this paper was gracefully granted by research teams from
+ LIG\footnote{http://www.liglab.fr} and Inria\footnote{http://www.inria.fr}.
+
+ The experiments in this paper can run via in less than 24 hours on a
+ moderately parallel host. More precisely, we had access to a Dell PowerEdge
+ R730 equipped with a total of 56 threads @2.4GHz each and 757G of RAM. For
+ this reason, the experimental campaign workflow was designed to be executed on
+ a single host.
+
 
 \subsubsection{Software dependencies}
 
+All the software dependencies of our code
 Managed by Nix.
+
+\dirtree{%
+.1 root .
+.2 zymakefile .
+.2 default.nix .
+.2 pkgs .
+.2 gz .
+.3 ANL-Intrepid.swf.gz .
+.3 CEA-Curie.swf.gz .
+.3 CTC-SP2.swf.gz .
+.3 KTH-SP2.swf.gz .
+.3 SDSC-BLUE.swf.gz .
+.3 SDSC-SP2.swf.gz .
+.3 UniLu-Gaia.swf.gz .
+.2 misc .
+.3 strongvisu .
+.3 visu .
+.2 ocst .
+.2 paper .
+}
 
 \subsubsection{Datasets}
 
