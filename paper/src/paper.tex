@@ -2,6 +2,7 @@
 \setcopyright{rightsretained}
 
 \usepackage{listings}
+\usepackage{hyperref}
 \usepackage{booktabs}
 \usepackage{url}
 \usepackage[utf8]{inputenc}
@@ -244,7 +245,6 @@ better job
 runtime estimations should improve the scheduling~\cite{chiang_impact_2002}.
 Some algorithms estimate runtime distributions model and choose jobs using
 probabilistic integration procedures~\cite{Nissimov2008}.
-
 However, these works do not address the duality between the cumulative and
 maximal scheduling costs, as mentioned in~\cite{learningruntimes}.
 While these previous works intend to estimate uncertain parameters, we 
@@ -708,8 +708,10 @@ figure is followed-up in figure~\ref{fig:follow} for the UniLu-Gaia log.}
 
 \begin{acks}
 
-Authors are sorted in alphabetical order. We warmly thank Pierre Neyron for help with the experiments. We gracefully thank the contributors
-of the Parallel Workloads Archive, Victor Hazlewood (SDSC SP2), Travis Earheart
+Authors are sorted in alphabetical order. The authors would like to warmly
+thank Pierre Neyron for help with computational experiments and Arnaud Legrand
+for discussions about reproducibility. We gracefully thank the contributors of
+the Parallel Workloads Archive, Victor Hazlewood (SDSC SP2), Travis Earheart
 and Nancy Wilkins-Diehr (SDSC Blue), Lars Malinowsky (KTH SP2), Dan Dwyer and
 Steve Hotovy (CTC SP2), Joseph Emeras (CEA Curie and UniLu Gaia), Susan
 Coghlan, Narayan Desay, Wei Tang (ANL Intrepid), and of course Dror Feitelson.
@@ -731,28 +733,50 @@ LIG\footnote{http://www.liglab.fr} and Inria\footnote{http://www.inria.fr}.
 
 \clearpage
 
-\section*{Artifacts Description Appendix}
+\section{artifact description: [online (bandit) policy selection for easy-backfilling]}
 
-This appendix describes the computational artifacts associated with this work. We
+\subsection{Abstract}
+
+this appendix describes the computational artifacts associated with this work. we
 take a lightweight approach to replicability by packaging a declarative
 workflow that generates all the figures from this paper and making it available
-publicly. Moreover, questions regarding replication can be freely directed at
+publicly. moreover, questions regarding replication can be freely directed at
 the authors via e-mail.
 
-All the code associated with this work is released under the ~\cite{ISC}
-license as a persistent Zenodo~\cite{zenodo} archive at~\cite{zenodomain}.
+all the code associated with this work is released under the ~\cite{isc}
+license as a persistent zenodo~\cite{zenodo} archive at~\cite{zenodomain}.
 
-\subsection{Packaging and Replicability}
+\subsection{Description}
 
 There are various approaches for making computational experiments replicable,
 among which distributing complete operating system images, containers, or
-packaging software. As our experiments are CPU bound, we decide to opt for the
-software packaging approach using the Nix~\cite{nix} packaging system. This
+packaging software. as our experiments are cpu bound, we decide to opt for the
+software packaging approach using the nix~\cite{nix} packaging system. This
 allows for replicating the experiments on clusters where virtualization is not
-available or kernels are old and decreases runtime. All the dependencies of our
+available or kernels are old and decreases runtime. all the dependencies of our
 experiments (including our own code, dependencies for data processing and
 visualization and workflow engine) are automatically managed by Nix up to the
 actual execution of the code.
+
+\subsubsection{check-list (artifact meta information)}
+
+{\small
+\begin{itemize}
+  \item {\bf algorithm: Scheduling Simulation Workflow}
+  \item {\bf program: Ocaml, R, Bash, Zymake(all sources and dependencies included)}
+  \item {\bf compilation: Ocaml 4.02.3, GNU bash version 4.4.5(1)-release, R version 3.3.2}
+  \item {\bf transformations: Patched nix standard environment.}
+  \item {\bf binary: Most binaries are cached by Nix channels.}
+  \item {\bf data set: Traces from the parallel workload archive, included.}
+  \item {\bf run-time environment: Nixpkgs 17.03}
+  \item {\bf hardware: Dell PowerEdge R730}
+  \item {\bf output: Files}
+  \item {\bf experiment workflow: \lstinline[basicstyle=\ttfamily\color{blue}]|zymakefile|, see below}
+  \item {\bf publicly available?: Yes}
+\end{itemize}
+}
+
+\subsubsection{Obtaining the code.}
 
 Running the experiments can be done on any platform equipped with the nix
 package manager by running:
@@ -761,18 +785,30 @@ package manager by running:
 nix-build (fetchTarball ...)
 \end{lstlisting}
 
-\subsection{Testbed}
+\subsubsection{Hardware}
 
  The experiments in this paper can run via in less than 24 hours on a moderately parallel
  host. More precisely, we had access to a Dell PowerEdge R730 equipped with
  a total of 56 threads @2.4GHz each and 757G of RAM. For this reason, the
  experimental campaign workflow was designed to be executed on a single host.
 
- \subsection{Workflow}
+\subsubsection{Software dependencies}
 
- All experiments are tied together using Zymake~\cite{zymake}, a minimalistic
- workflow system designed for computational experiments\footnote{The zymake system
- is also packaged by our Nix expressions.}. This system is
+Managed by Nix.
+
+\subsubsection{Datasets}
+
+From Swf Archive. Cached.
+
+\subsection{Installation}
+
+nix-build
+
+\subsection{Experiment workflow}
+
+ All experiments are tied together using zymake~\cite{zymake}, a minimalistic
+ workflow system designed for computational experiments\footnote{the zymake system
+ is also packaged by our nix expressions.}. This system is
  analogous to a traditional build system with added workflow capabilities. The
  entire workflow that generates this article from the input data is contained
  in a single \lstinline[basicstyle=\ttfamily\color{blue}]|zymakefile| to be
@@ -780,18 +816,30 @@ nix-build (fetchTarball ...)
  following steps:
 
  \begin{itemize}
-   \item[Preprocessing]: Data extraction from archives, filtering, resampling.
-     This is principally using shell scripts for data manipulation (see file
+   \item[data]: Data extraction from archives, filtering, resampling.
+     this is principally using shell scripts for data manipulation (see file
      \lstinline[basicstyle=\ttfamily\color{blue}]|misc/strong\_filter| for the
      filtering steps used) and ocaml code that implements the resampling method
      described in~\ref{ssub:resampling}.
 
-   \item[Simulation]: This step runs the lightweight ocaml backfilling
-     simulator specially written for this work. This simulator is made
-     available under the ISC~\cite{ISC} license both as a persistent Zenodo
+   \item[simulation]: This step runs the lightweight ocaml backfilling
+     simulator specially written for this work. this simulator is made
+     available under the isc~\cite{isc} license both as a persistent zenodo
      archive at~\cite{ocst} and as a git repository at ~\cite{ocstgit}.
 
-   \item[Analysis]: This step runs R code that generates the figures
+   \item[analysis]: This step runs r code that generates the figures
      presented in this paper.
  \end{itemize}
+
+
+\subsection{Evaluation and expected result}
+
+o/zymakefile/pdfs
+
+\subsection{Experiment customization}
+
+modify zymakefile
+
+\subsection{Notes}
+This artefact description was prepared according to the guidelines located at \url{http://ctuning.org/ae/submission.html}
 \end{document}
