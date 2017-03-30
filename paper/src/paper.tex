@@ -772,6 +772,8 @@ actual execution of the code.
 
 \subsubsection{Obtaining the code.}
 
+\textbf{one-liner : replication}
+
 Running the experiments can be done on any platform equipped with the nix
 package manager by running:
 
@@ -799,26 +801,6 @@ nix-build (fetchTarball ...)
 
 All the software dependencies of our code
 Managed by Nix.
-
-\dirtree{%
-.1 root .
-.2 zymakefile .
-.2 default.nix .
-.2 pkgs .
-.2 gz .
-.3 ANL-Intrepid.swf.gz .
-.3 CEA-Curie.swf.gz .
-.3 CTC-SP2.swf.gz .
-.3 KTH-SP2.swf.gz .
-.3 SDSC-BLUE.swf.gz .
-.3 SDSC-SP2.swf.gz .
-.3 UniLu-Gaia.swf.gz .
-.2 misc .
-.3 strongvisu .
-.3 visu .
-.2 ocst .
-.2 paper .
-}
 
 \subsubsection{Datasets}
 
@@ -862,7 +844,30 @@ o/zymakefile/pdfs
 
 \subsection{Experiment customization}
 
-modify zymakefile
+Readers interested with modifying the experiments can obtain the zenodo archive at \url{https://...}
+
+The file tree has the following structure:
+
+\dirtree{%
+  .1 root .
+.2 zymakefile \textcolor{orange}{The workflow description} .
+.2 default.nix .
+.2 pkgs .
+.2 gz .
+.3 ANL-Intrepid.swf.gz .
+.3 CEA-Curie.swf.gz .
+.3 CTC-SP2.swf.gz .
+.3 KTH-SP2.swf.gz .
+.3 SDSC-BLUE.swf.gz .
+.3 SDSC-SP2.swf.gz .
+.3 UniLu-Gaia.swf.gz .
+.2 misc .
+.3 strongvisu .
+.3 visu .
+.2 ocst .
+.2 paper .
+}
+
 
 \subsection{Notes}
 This artefact description was prepared according to the guidelines located at \url{http://ctuning.org/ae/submission.html}
