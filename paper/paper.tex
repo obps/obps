@@ -405,16 +405,23 @@ Algorithm~\ref{alg:EASY} describes the EASY($P,\Theta$) heuristic.
 \section{Online tuning}
 \label{sec:online}
 
-We present here the strategies we have retained for selecting a policy. In the remainder, we will refer to the period during which a selected policy is applied as the \textit{policy period} and will denote the length of this period as $\Delta$. The time interval is thus divided into periods of equal length: $\Delta_0, \cdots, \Delta_T$, where $T$ is the index of the current policy period; all periods have length $\Delta$. At the beginning of each period, from the first period $\Delta_0$ to the current period $\Delta_T$, a new policy is selected. 
+\begin{figure*}[ht]
+  \centering
+  \includegraphics[scale=0.6]{figures/variability.pdf}
+  \caption{Variability in the weekly average waiting time in the KTH-SP2 trace (see Subsection~\ref{sub:traces}) for 7 different policies.}
+  \label{fig:mosn}
+\end{figure*}
 
-We assume here that there is a certain regularity among periods, \textit{i.e.} that the distributions underlying the jobs submitted do not radically differ between consecutive periods. This assumption is validated in the study presented in~\ref{???}. It further entails that the behavior of a policy on the previous periods reflects its behavior on the current one, so that the selection of a policy can be based on its behavior on previous periods. However, there usually is an important variability on the cost metric between different periods, for any policy. This is illustrated in Figure~\ref{fig:variability} where \textcolor{orange}{???}. When the cost metric is averaged over different periods, there is a tradeoff to find in between longer periods that would somehow limit the variability, and shorter ones that yield more values for the estimation.
+We present here the strategies we have retained for selecting a policy. We will refer to the period during which a selected policy is applied as the \textit{policy period} and will denote the length of this period as $\Delta$. The time interval is thus divided into periods of equal lengths ($\Delta$): $\Delta_0, \cdots, \Delta_T$, where $T$ is the index of the current policy period. A new policy is selected at the beginning of each period and applied during the whole period.
+
+We further assume that there is a certain regularity among periods, \textit{i.e.} that the distributions underlying the jobs submitted do not radically differ between consecutive periods. This assumption is validated in the study presented in~\ref{???}. It further entails that the behavior of a policy on the previous periods reflects its behavior on the current one, so that the selection of a policy can be based on its behavior on previous periods. However, there may be some variability between different periods for certain cost metrics. This is illustrated in Figure~\ref{fig:mosn} that displays the average waiting time for a trace using weekly periods encompassing one year. As one can note, the average waiting time varies a lot from one week to the other, for all the 7 policies considered. THis shows that when when the cost metric is averaged over different periods, there is a tradeoff to find in between longer periods that would somehow limit the variability, and shorter ones that yield more values for the estimation. We will come back to this issue below.
 
 The selection of a policy is of course reminiscent of reinforcement learning. It is important to note, however, that a pure reinforcement learning approach is difficult to develop in our context as \textcolor{orange}{???}. We rely here on simpler, yet we believe more effective, strategies to solve this problem. These strategies are applied online and rely on exact simulation, noisy simulation and $\epsilon$-greedy bandit exploration.
 
 \subsection{Online policy selection with exact simulation}
 \label{sub:feedback}
 
-Several simulators have been developed for "playing" reordering policies on a given set of jobs. Such simulations are interesting inasmuch as they provide an estimate of the cost of a given policy on a set of jobs. \textcolor{orange}{TO BE COMPLETED}
+Several simulators have been developed for "playing" reordering policies on a given set of jobs. We rely in this study on a lightweight simulator (see Section~\ref{sec:experiments}) that can efficiently simulate different policies. Such simulators are interesting inasmuch as they provide an estimate of the cost of a given policy on a set of jobs, as described below.
 
 Let $l(\Delta_t)$ denote the number of jobs \textit{submitted} during the period $\Delta_t$ ($0 \le t < T$), and $P_i$ ($1 \le i \le 10$) one reordering policy (defined in Section~\ref{subsec:policies}). The cost of policy $P_i$ during the period $\Delta_t$ is defined as:
 %
@@ -568,13 +575,6 @@ hours, including input preparation and analysis code.
 
 \subsubsection{Resampling}
 \label{ssub:resampling}
-
-\begin{figure*}[ht]
-  \centering
-  \includegraphics[scale=0.6]{figures/variability.pdf}
-  \caption{Variability in the weekly average waiting time in the KTH-SP2 trace (pre-processing described in subsection~\ref{sub:traces}) for a few policies.}
-  \label{fig:mosn}
-\end{figure*}
 
 %Validating algorithms on real data is a notoriously hard
 %problem~\cite{feitbook}. The case of batch scheduling is made especially
