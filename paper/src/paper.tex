@@ -782,14 +782,32 @@ time spaced weeks.
 
 \subsubsection{Experimental campaign}
 
+We use devise the following experimental campaign. For each workload trace
+considered, we use the original data to resample 100 traces, each of a length
+of two years. For each resampled trace, we run simulations using the
+EASY($P,\Theta$) scheduling heuristic. We fix the value of the job waiting time
+threshold $\Theta$ at 40 hours, a sane default. The choice of this default
+stems from the analysis developped in ~\cite{jsspp17}. This value is high
+enough for queue reorderings to be leveraged while being low enough to provide
+the functional requirement of preventing starvation. We simulate
+EASY($P,\Theta=40h$) using the following policies:
+
+\begin{itemize}
+  \item All fixed $P_i$ for $1<i<10$.
+  \item The simulation-based ("full feedback") strategy.
+  \item The noisy simulation ("noisy feedback") variant.
+  \item The bandit feedback strategy with a fixed value of $\lambda=0$.
+\end{itemize}
+
+This campaign of 7 (traces) * 100 (resampling) * 13 Policies
 
 \subsubsection{Replicability}
 
 Readers interested in replicating the experiments (or a part thereof) are
-invited to peruse to the 'artifacts description' appendix of this paper.  We
+invited to peruse the 'artifacts description' appendix of this paper. We
 provide to persistent archives containing the simulator, the analysis code and
 an automated workflow that replicates all experiments and figures present in
-this paper.
+this paper with automatic dependency management.
 
 \subsection{Results}
 \label{sub:results}
