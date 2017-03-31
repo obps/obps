@@ -152,9 +152,8 @@ reordering policy in a fixed search set of semantically diverse options.
 
 The first method (full feedback) continuously uses simulation on data gathered
 from the past and current system workload. In order to reflect the
-uncertainties in the data, we also evaluate a "noisy" variant in which
-simulations are imprecise\footnote{This mitigates the fact that we are
-using the same batch scheduling simulator to learn and validate our policies}.
+uncertainties in the data, we also evaluate a more realistic "noisy" variant in
+which simulations are imprecise.
 
 The second method (bandit feedback) is a simulator-less approach based on a
 multi-armed bandit algorithm that derives feedback by measuring system
