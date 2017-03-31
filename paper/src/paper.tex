@@ -860,6 +860,38 @@ date.}
 \section{Conclusion}
 \label{sec:ccl}
 
+The scheduling of parallel jobs on a given HPC platform is a very hard
+optimization problem with many uncertain parameters. Even thought these
+uncertainties could be reduced, determining efficient strategies remains
+difficult.
+
+We presented in this work a new way of addressing this problem.  The idea was
+to look at the level of the scheduling process instead of trying to change its
+parameters.
+
+More precisely, we showed that it is worth to learn on the scheduling process
+itself. Indeed, reordering the submission queues under EASY-BackFilling leads
+to considerable gains in performance.
+
+This approach was used in two methods: a method based on a simulator and a
+method based on multi-armed bandits. The first one provides very good results,
+improving the average waiting times of the baseline FCFS ordering policy by a
+factor of \textcolor{orange}{X} to \textcolor{orange}{X} The second one is
+slighly less efficient with an improvement factor of  \textcolor{orange}{X} to
+\textcolor{orange}{X}. However, it is more easy to use and less costly to run.
+
+There are two directions for extensions of this work.  First, the question of
+the existence of a more efficient selection strategy for bandit feedback for
+these systems is not addressed by this work. Is a simulator really necessary?
+%@Denis: a essayer.. 1 mois de travail pour tester?
+Second, one can help but wonder what performance could be achieved by extending
+the search space to arbitrary policies. This means doing a complete study
+including lower bounding the cost and studying learning performance using some
+function approximator.
+%@Denis: c'est ce que font vasily et salah de deux manieres differentes.
+As these directions are data-bound, they will require careful application of
+trace resampling techniques in order to be successful.
+
 \begin{acks}
 
 Authors are sorted in alphabetical order. The authors would like to warmly
