@@ -192,13 +192,12 @@ scheduling and learning algorithms in this context.  Let us start by recalling
 some basics about scheduling heuristics in HPC platforms:
 
 Parallel job scheduling is a old studied theoretical
-problem~\cite{Frachtenberg:2009:JSS:1692356} \textcolor{orange}{(cite
-feitelson-rudolph-swiegelshon)} whose practical ramifications, varying
-hypotheses, and inherent uncertainty of the problem applied on the HPC field
-have driven practitioners to use simple heuristics (and researchers to
-study their behavior). The two most popular heuristics for HPC platforms are
-EASY~\cite{easy} and Conservative~\cite{Mu'alem:2001:UPW:380314.380315}
-backfillings.
+problem~\cite{Frachtenberg:2009:JSS:1692356,Feitelson:2004:PJS:2128864.2128865}
+whose practical ramifications, varying hypotheses, and inherent uncertainty of
+the problem applied on the HPC field have driven practitioners to use simple
+heuristics (and researchers to study their behavior). The two most popular
+heuristics for HPC platforms are EASY~\cite{easy} and
+Conservative~\cite{Mu'alem:2001:UPW:380314.380315} backfillings.
 
 While Conservative Backfilling offers many advantages~\cite{bfchar}, it has a
 significant computational overhead, which mainly explains why most of the
@@ -941,10 +940,11 @@ the archive.
 
 \subsection{Experiment customization}
 
-Readers interested with modifying the experiments can obtain the zenodo archive at \url{https://...}
+Readers interested with modifying the experiments can obtain the zenodo archive
+at \url{https://...}
 
-The experiments are replicated with the same procedure as before, this time invoking
-the build command with the local folder:
+The experiments are replicated with the same procedure as before, this time
+invoking the build command with the local folder:
 
 \begin{lstlisting}
 nix-build -A banditSelection
@@ -970,5 +970,8 @@ sizes) can be obtained by modifying the
 \lstinline[basicstyle=\ttfamily\color{blue}]|zymakefile|. For modification
 
 \subsection{Notes}
-This artefact description was prepared according to the guidelines located at \url{http://ctuning.org/ae/submission.html}
+
+This artefact description was prepared according to the guidelines located at
+\url{http://ctuning.org/ae/submission.html}
+
 \end{document}
