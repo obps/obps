@@ -2,7 +2,7 @@ traces= ANL-Intrepid CEA-Curie CTC-SP2 KTH-SP2 SDSC-BLUE SDSC-SP2 UniLu-Gaia
 
 #traces= l_kth_sp l_ctc_sp
 
-policyfam_full = wait mwait lpf lqf expfact mexpfact lrf srf laf
+policyfam_full = wait mwait lpf spf lqf sqf expfact mexpfact lrf srf laf saf
 
 policyfam_normal = wait spf sqf lqf expfact
 
@@ -171,7 +171,7 @@ $(< type="simulated" strategy="bandit-onpolicy" rewardtype="raw" banditType="exp
 
 misc/visu/cumobj_diff.R
 $(< type="simulated" strategy="fixed" prim=*pfam).swf
--t "LCFS" -t "SPF" -t "LQF" -t "EXP" -t "LEXP" -t "LRF" -t "SRF" -t "LAF"
+-t "LCFS" -t "LPF" -t "SPF" -t "LQF" -t "SQF" -t "SEXP" -t "LEXP" -t "LRF" -t "SRF" -t "LAF" -t "SAF"
 -o $(>).cumDiffS
 
 misc/visu/cumobj_diff.R
