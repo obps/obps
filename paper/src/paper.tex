@@ -446,7 +446,7 @@ Algorithm~\ref{alg:EASY} describes the EASY($P,\Theta$) heuristic.
   (see Subsection~\ref{sub:traces}) for 7 different policies. The policy set is
   reduced as not to obstruct the figure.}
 
-  \label{fig:mosn}
+  \label{fig:variability}
 \end{figure*}
 
 We present here the strategies we have retained for selecting a policy. We will
@@ -478,7 +478,7 @@ The selection of a policy is of course reminiscent of reinforcement learning.
 It is important to note, however, that a pure reinforcement learning approach
 is difficult to develop in our context. Indeed, while we have outlined a
 reduced action space, the state space to consider is infinite. This is not
-prohibitive \textit{per se}, as modern methods~\ref{approximatereinforcement}
+prohibitive \textit{per se}, as modern methods~\cite{aprl}
 can bypass dimensionality issues via function approximation. However, these
 methods rely on large amounts of data, and we are studying online (often called
 \textit{on-policy} methods in reinforcement learning) methods. We rely here on
@@ -647,22 +647,6 @@ less important once the estimates for the different policies are reliable
 We believe this is due to the properties of the traces we use, as
 explained in Section~\ref{sec:experiments}.
 
-%\begin{algorithm}[h]
-%  \caption{Epsilon-Greedy Bandit policy}
-%  \begin{algorithmic}[1]
-%    \renewcommand{\algorithmicrequire}{\textbf{Input:}}
-%    \renewcommand{\algorithmicensure}{\textbf{Output:}}
-%    \REQUIRE $0 < \epsilon < 1$, $K>1$
-%    \FOR {$t = 1, 2, \ldots$}
-%    \STATE Let $i_t$ be the reordering heuristic with the highest current
-%    average reward.
-%    \STATE With probability $1-\epsilon$ use $i_t$ and with probability
-%    $\epsilon$ use a random reordering heuristic.
-%    \ENDFOR
-%  \end{algorithmic}
-%  \label{alg:epsg}
-%\end{algorithm}
-
 \section{Experiments}
 \label{sec:experiments}
 
@@ -796,10 +780,11 @@ EASY($P,\Theta=40h$) using the following policies:
   \item All fixed $P_i$ for $1<i<10$.
   \item The simulation-based ("full feedback") strategy.
   \item The noisy simulation ("noisy feedback") variant.
-  \item The bandit feedback strategy with a fixed value of $\lambda=0$.
+  \item The bandit feedback strategy with hyperparameters $\lambda=0$, $\Delta=1 \text{day}$
+  \item The bandit feedback strategy with hyperparameters $\lambda=0$, $\Delta=1 \text{week}$.
 \end{itemize}
 
-This campaign of 7 (traces) * 100 (resampling) * 13 Policies
+This campaign of 7 traces * 100 resampling * 13 algorithms is repeated
 
 \subsubsection{Replicability}
 
@@ -812,7 +797,7 @@ this paper with automatic dependency management.
 \subsection{Results}
 \label{sub:results}
 
-\begin{figure*}[h]
+\begin{figure*}[ht]
   \centering
   \includegraphics[scale=0.6]{figures/CTC-SP2.pdf}
   \includegraphics[scale=0.6]{figures/KTH-SP2.pdf}\\
