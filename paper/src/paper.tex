@@ -365,7 +365,6 @@ The EASY heuristic uses a job queue to select and backfill jobs. While this job
 queue is ordered in FCFS order in the original heuristic, it is possible to
 reorder it at will. We settle on a reasonable search space of 10 reordering policies.
 
-%wait mwait lpf spf sqf lqf expfact mexpfact lrf srf laf saf
 \begin{enumerate}
   \item FCFS: First-Come First-Serve, which is the widely used default policy~\cite{easy}.
   \item LCFS: Last-Come First-Serve.
@@ -800,6 +799,11 @@ EASY($P,\Theta=40h$) using the following strategies:
     resampled data is in a stationary regime \textit{by construction}, as
     explained in~\ref{ssub:resampling}.
 
+  \item An additional "Random" strategy to be used as a reference point, with
+    hyperparameter $ \Delta \in \left\{ 1 \text{day},1 \text{week} \right\}$.
+    This strategy corresponds to choosing $P_i$ uniformly at random in $\left\{
+      P_1 , \cdots, P_{12} \right\}$ during every period $\Delta_t$.
+
 \end{itemize}
 
 The experiment campaign consists of 7 traces $\times$ 100 resamples $\times$
@@ -822,9 +826,6 @@ this paper with automatic dependency management.
 \subsection{Results}
 \label{sub:results}
 
-
-We first attract the attention of the reader to Table~\ref{tab:full}
-
 \begin{table*}[]
   \centering
   \ra{1.3}
@@ -844,6 +845,50 @@ We first attract the attention of the reader to Table~\ref{tab:full}
     \hline
   \end{tabular}
 \end{table*}
+
+We begin by attracting the attention of the reader to Table~\ref{tab:full},
+which reports the average cumulative waiting time performance improvement over
+EASY(FCFS,40h) of all the fixed policies defined in ~\ref{subsec:policies}. More
+precisely, let us denote the resampled traces of a given workload by $T_k$,
+where k is the index of the resampled trace ($1 \le k \le 100$). We also denote
+the number of jobs in the resampled trace $T_k$ by $l(T_k)$. We denote by
+$\bar{w}(T_k,S)$ the cumulative waiting time obtained by a simulation run for a
+strategy $S$:
+
+\begin{equation}
+  \bar{w}(T_k,P) = \sum_{j=1}^{l(T_k)} \text{Wait}_j^{P}
+\end{equation}
+
+So that the values appearing in Table~\ref{tab:full} are exactly:
+
+\begin{equation}
+  \frac{\sum_{k=1}^{k=100}\bar{w}(T_k,\text{EASY}(P_i,40h))-
+  \bar{w}(T_k,\text{EASY}(\text{FCFS},40h))}{\sum_{k=1}^{k=100}\bar{w}(T_k,\text{EASY}(\text{FCFS},40h))}
+\end{equation}
+
+Observe that \textcolor{orange}{TODO lli  p sumlip sumlip llll sumli psumlips umlip sumil ip sumplip sumsl  ipsumul   ipsumm}.
+
+\begin{figure}[]
+  \centering
+  \includegraphics[scale=0.6]{figures/full-UniLu-Ga.pdf}
+  \caption{Evolution of the average cumulative waiting time improvement
+    compared to EASY-FCFS of the policies $P_i$ for $i = 1 \ldots 10$ on the
+    UniLu-Gaia trace. The average is obtained by resampling the original trace
+    100 times. The dashed lines represent the 10th and 90th percentiles of the
+  values across this resampling.}
+  \label{fig:all}
+\end{figure}
+
+Figure~\ref{fig:all} reports the evolution of this quantity for the UniLu-Gaia
+trace, which means that it shows how the average improvement in cumulative
+waiting time evolves as a function of time. In other words, this is the average
+curve obtained if one were to plot the cumulative sum of job waiting times for
+every resampled trace, incrementing the sum when a job finishes. Accordingly,
+the final values attained by every curve correspond exactly to the values
+reported in Table~\ref{tab:full}. The dashed values represent the 10th and 90th
+percentile of the values.
+
+Observe that \textcolor{orange}{TODO}
 
 \begin{figure*}[]
   \centering
@@ -873,29 +918,63 @@ figure is followed-up in figure~\ref{fig:follow} for the UniLu-Gaia log.}
   \label{fig:follow}
 \end{figure}
 
-\begin{figure}[]
+Figures~\ref{fig:small} and~\ref{fig:follow} report the main experimental
+result concerning the strategies proposed in this paper. These figures show the average cumulative improvement
+of over EASY(FCFS,40h) of the three strategies we propose in the same format as Figure~\ref{fig:all}.
+There are four strategies displayed on the graph:
+
+\begin{itemize}
+  \item Full (simulated) Feedback ($\Delta=$1 day)
+  \item Noisy (simulated) Feedback ($\Delta=$1 day)
+  \item Epsilon-Greedy (Bandit Feedback) ($\Delta=$1 day, $\epsilon=0.5$)
+  \item Random $P \in P_i, 1 \le k \le 100$. ($\Delta=$1 day)
+\end{itemize}
+
+Observe that \textcolor{orange}{TODO lli  p sumlip sumlip llll sumli psumlips umlip sumil ip sumplip sumsl  ipsumul   ipsumm}.
+
+\begin{table*}[]
   \centering
-  \includegraphics[scale=0.6]{figures/full-UniLu-Ga.pdf}
+  \ra{1.3}
+  \caption{Average Cumulative waiting time improvement with respect to EASY-FCFS of fixed policies.}
+  \label{tab:strat}
+  \begin{tabular}{@{}lrrrrrrrrrrr@{}}
+    \hline
+    Trace        & Random &      & Full &      & Noisy &      & Bandit &     \\
+    \hline
+    $\Delta$     & day    & week & day  & week & day   & week & day    & week\\
+    CTC-SP2      & LCFS   & LPF  & SPF  & LQF  & SQF   & SEXP & LEXP   & LRF \\
+    SDSC-SP2     & LCFS   & LPF  & SPF  & LQF  & SQF   & SEXP & LEXP   & LRF \\
+    SDSC-BLUE    & LCFS   & LPF  & SPF  & LQF  & SQF   & SEXP & LEXP   & LRF \\
+    ANL-Intrepid & LCFS   & LPF  & SPF  & LQF  & SQF   & SEXP & LEXP   & LRF \\
+    CEA-Curie    & LCFS   & LPF  & SPF  & LQF  & SQF   & SEXP & LEXP   & LRF \\
+    Unilu-Gaia   & LCFS   & LPF  & SPF  & LQF  & SQF   & SEXP & LEXP   & LRF \\
+    \hline
+  \end{tabular}
+\end{table*}
 
-  \caption{Evolution of the average cumulative waiting time improvement
-    compared to EASY-FCFS of the policies $P_i$ for $i = 1 \ldots 10$ on the
-    UniLu-Gaia trace. The average is obtained by resampling the original trace
-    100 times. The dashed lines represent the 10th and 90th percentiles of the
-  values across this resampling.}
+Table~\ref{tab:strat} gives the performance of all variants for $\Delta=$ 1
+day and $\Delta=$ 1 week.
 
-  \label{fig:all}
-\end{figure}
+Observe that \textcolor{orange}{TODO lli  p sumlip sumlip llll sumli psumlips umlip sumil ip sumplip sumsl  ipsumul   ipsumm}.
 
 \begin{figure}[]
   \centering
   \includegraphics[scale=0.6]{figures/mosaicbandit-UniLu-Ga.pdf}
 
   \caption{Share of the policies chosen by Epsilon-Greedy as a function of
-  time.  The average choice is obtained by resampling the original trace 100
+  time. The average choice is obtained by resampling the original trace 100
 times and aggregating by date.}
 
   \label{fig:mosb}
 \end{figure}
+
+Figure~\ref{fig:mosb} gives insight regarding the behavior of the
+Noisy (simulated) Feedback policy. This figure reports the share of the policies chosen
+by the strategy on average as a function of time. This is an area plot, which means
+that the height of the colored region represents the value. Moreover, the proportion of
+times each policies are chosen by the strategy is aggregated across resampled traces.
+
+Observe that \textcolor{orange}{TODO lli  p sumlip sumlip llll sumli psumlips umlip sumil ip sumplip sumsl  ipsumul   ipsumm}.
 
 \begin{figure}[]
   \centering
@@ -903,10 +982,15 @@ times and aggregating by date.}
 
   \caption{Share of the policies chosen by the Noisy policy. The average choice
   is obtained by resampling the original trace 100 times and aggregating by
-date.}
+  date.}
 
   \label{fig:mosn}
 \end{figure}
+
+Figure~\ref{fig:mosn} is the analogue of Figure~\ref{fig:mosb}, this time for
+the Epsilon-Greedy policy.
+
+Observe that \textcolor{orange}{TODO lli  p sumlip sumlip llll sumli psumlips umlip sumil ip sumplip sumsl  ipsumul   ipsumm}.
 
 \section{Conclusion}
 \label{sec:ccl}
