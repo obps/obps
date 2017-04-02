@@ -91,9 +91,9 @@ print(moma)
 print(momi)
 
 pdf(args$o,width=5.5, height=4)
-p=ggplot(dfs,aes(x=time-tmi,y=mean_obj,ymin=sdn,ymax=sdp,fill=name,color=name),)+
+p=ggplot(dfs,aes(x=time-tmi,y=mean_obj,fill=name,color=name))+
   geom_line()+
-  geom_ribbon(alpha=0.03,linetype="dotted")+
+  geom_ribbon(data=dfs,aes(x=time-tmi,ymin=sdn,ymax=sdp,fill=name,color=name),alpha=0.03,linetype="dashed",size=0.35)+
   expand_limits(x = c(tmi, tma+(tma-tmi)*0.15))+
   #scale_x_continuous(limits=c(min(timestamp_to_date(dfs$time)),max(timestamp_to_date((dfs$time))-min(timestamp_to_date(dfs$time)))))+
   scale_x_continuous(breaks = brkx, labels = labx) +
