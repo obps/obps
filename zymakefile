@@ -1,6 +1,6 @@
-traces= ANL-Intrepid CEA-Curie CTC-SP2 KTH-SP2 SDSC-BLUE SDSC-SP2 UniLu-Gaia
+#traces= ANL-Intrepid CEA-Curie CTC-SP2 KTH-SP2 SDSC-BLUE SDSC-SP2 UniLu-Gaia
 
-#traces= l_kth_sp l_ctc_sp
+traces= l_kth_sp l_ctc_sp
 
 policyfam_full = wait mwait lpf spf lqf sqf expfact mexpfact lrf srf laf saf
 
@@ -12,15 +12,17 @@ policyfams = policyfam_full policyfam_small policyfam_normal
 
 periods = 604800 86400
 
-period = 86400
+period_day = 86400
+
+period_week = 604800
 
 threshold = 200000
 
-metaids = $(range 1 2)
+metaids = $(range 1 10)
 
-strids = $(range 1 2)
+strids = $(range 1 5)
 
-sfsids = $(range 1 2)
+sfsids = $(range 1 20)
 
 back = sqf
 
@@ -176,10 +178,11 @@ $(< type="simulated" strategy="fixed" prim=*pfam).swf
 
 misc/visu/cumobj_diff.R
 $(< type="simulated" strategy="fixed" prim="wait").swf
-$(< type="simulated" strategy="bandit-random").swf
-$(< type="simulated" strategy="bandit-clairvoyant" rewardtype="raw").swf
-$(< type="simulated" strategy="bandit-noisy" rewardtype="raw").swf
-$(< type="simulated" strategy="bandit-onpolicy" rewardtype="raw" banditType="expgreedy" hyper="0.5").swf
+$(< type="simulated" strategy="bandit-random" period=period_week).swf
+$(< type="simulated" strategy="bandit-clairvoyant" rewardtype="raw" period=period_week).swf
+$(< type="simulated" strategy="bandit-noisy" rewardtype="raw" period=period_week).swf
+$(< type="simulated" strategy="bandit-onpolicy" rewardtype="raw" banditType="expgreedy" hyper="0.5" period=period_day).swf
+$(< type="simulated" strategy="bandit-onpolicy" rewardtype="raw" banditType="expgreedy" hyper="0.5" period=period_week).swf
 -t "Random" -t "Full" -t "Noisy" -t "Bandit"
 -o $(>).cumDiffB
 
@@ -218,7 +221,7 @@ $(metaid=*metaids ).selectf
 
 : pwd; echo
 '
-$(trace=*traces type="cumobj_bandit_diffb" pfam=policyfam_full period=period hyper=0 ).pdf
+$(trace=*traces type="cumobj_bandit_diffb" pfam=policyfam_full hyper=0 ).pdf
 $(trace=*traces type="cumobj_bandit_diff" pfam=policyfam_full period=period hyper=0 ).pdf
 $(trace=*traces type="mosaic" strategy="bandit-clairvoyant" pfam=policyfam_full period=period hyper=0).pdf
 $(trace=*traces type="mosaic" strategy="bandit-noisy" pfam=policyfam_full period=period  hyper=0).pdf
