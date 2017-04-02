@@ -644,8 +644,16 @@ P = \mbox{argmin}_{P_i, 1 \le i \le 12} w(\rightarrow T;P_i)
 Several studies propose to decay $\epsilon$ over time, the exploration being
 less important once the estimates for the different policies are reliable
 \cite{Tokic:2010}. This strategy has however not been beneficial in our case.
-We believe this is due to the properties of the traces we use, as
-explained in Section~\ref{sec:experiments}.
+We believe this is due to the properties of the traces we use, as explained in
+Section~\ref{sec:experiments}. The $\epsilon$-greedy strategy is known to be
+outperformed in terms of regret by other classical algorithms such as the UCB
+or EXP family of algorithms. See~\cite{bubnow} for a precise definition and
+thourough treatment of this subject. These algorithms however all rely on
+pre-normalized rewards. Here, the scale of $w_{\epsilon}(t;P_i)$ is not known
+in advance. While the usual doubling tricks can be devised to go around
+sequential issues of scale with good asymptotical performance, they ruin
+performance in practice. Accordingly, we only perform experiments using the
+simple $\epsilon$-greedy method.
 
 \section{Experiments}
 \label{sec:experiments}
@@ -757,7 +765,7 @@ For each of these users, we choose a week of the original trace uniformly at
 random. The jobs from this user in this original week are chosen to be present
 in the week being resampled.  This simple mechanism enables us to preserve the
 dependency within a week.  Although the system state may not be independent
-from one week to an other, we rely on existing work~\ref{jsspp17} and assume
+from one week to an other, we rely on existing work~\cite{jsspp17} and assume
 for these experiments that the system is in a stationary state. While we
 do provide guidelines as how to incorporate tracking variant of our algorithms
 in~\ref{sec:online} by introducing a decaying discount factor $\lambda$,
@@ -950,33 +958,17 @@ figure is followed-up in figure~\ref{fig:follow} for the UniLu-Gaia log.}
 Figures~\ref{fig:small} and~\ref{fig:follow} report the main experimental
 result concerning the strategies proposed in this paper. These figures show the
 average cumulative improvement of over EASY(FCFS,40h) of the three strategies
-we propose in the same format as Figure~\ref{fig:all}.  There are four
+we propose in the same format as Figure~\ref{fig:all}. There are five
 strategies displayed on the graph:
 
 \begin{itemize}
-  \item Full (simulated) Feedback ($\Delta=$1 day)
-  \item Noisy (simulated) Feedback ($\Delta=$1 day)
-  \item Epsilon-Greedy (Bandit Feedback) ($\Delta=$1 day, $\epsilon=0.5$)
-  \item Random $P \in P_i, 1 \le k \le 100$. ($\Delta=$1 day)
+  \item Random $P \in P_i, 1 \le k \le 100$. ($\Delta=$1 week)
+  \item Epsilon-Greedy (Bandit Feedback) ($\Delta=$1 week)
+  \item Epsilon-Greedy (Bandit Feedback) ($\Delta=$1 day)
+  \item Full (simulated) Feedback ($\Delta=$1 week)
+  \item Noisy (simulated) Feedback ($\Delta=$1 week)
 \end{itemize}
 
-Table~\ref{tab:strat} reports the average total waiting time performance
-improvement over EASY(FCFS,40h) of all the proposed strategies along with the
-random variant.
-
-We make the following observations.
-
-\paragraph
-\textbf{FCFS vs Random.} Note that randomly taking a policy in the search
-set defined in ~\ref{subsec:policies} gives already a much better performance
-than EASY(FCFS). This is due
-
-\paragraph
-\textbf{Simulated Feedback finds the best policy}
-\paragraph
-\textbf{Noisy simulations are useful.}
-\paragraph
-\textbf{Full vs Bandit feedback}
 
 \begin{table*}[]
   \centering
@@ -998,10 +990,46 @@ than EASY(FCFS). This is due
   \end{tabular}
 \end{table*}
 
-Table~\ref{tab:strat} gives the performance of all variants for $\Delta=$ 1
-day and $\Delta=$ 1 week.
+Table~\ref{tab:strat} reports the average total waiting time performance
+improvement over EASY(FCFS,40h) of all the proposed strategies along with the
+random variant.
 
-Observe that \textcolor{orange}{TODO lli  p sumlip sumlip llll sumli psumlips umlip sumil ip sumplip sumsl  ipsumul   ipsumm}.
+We make the following observations.
+
+\textbf{FCFS vs Random.} Randomly taking a policy in the search set defined in
+~\ref{subsec:policies} is better than using the FCFS order. This is due to the
+known fact that the FCFS order is not optimal for optimizing the average
+waiting time objective, and confirms that the search set is well chosen.  The
+value of the period length $\Delta$ has an impact on the performance of the
+random policy. Indeed, the shorter period leads to better performance. We
+suggest that this is due to the properties of the system under study. Indeed,
+when a bad policy is used, the job queue builds up. By switching more
+frequently from bad to good policies, the system never has time to build up the
+job queue. In other words, while bad decisions impact the system through an
+accumulation of waiting jobs, there is less contribution to system inertia from
+good decisions, as the number of jobs in queue is below bounded by zero. This
+interpretation also means that randomized bandit strategies are robust by
+design, and needs more subsequent experimenting to be validated.
+
+\textbf{The Simulated Feedback strategy consistently performs as well as the
+best fixed policy.} The values attained by the simulation-based strategy match
+the highlighted values from Table~\ref{tab:full}. This corresponds to the curve
+labeled "Full" in Figures~\ref{fig:small} and~\ref{fig:follow}. Moreover,
+these average cumulative waiting time curves exhibit linearity (as opposed to
+being concave), which further shows that the choice of the best policy can be
+made rapidly.  Note that the value of $\Delta$ has no impact over the
+performance of this strategy.
+
+\textbf{Noisy simulations can be used.} The performance attained by the noisy
+variant almost matches that of the simulation-based strategy. This indicates
+that it is not necessary to have access to a precise simulator. Rather, we may
+hope that an imprecise but unbiased reporting of the performance is enough to
+rapidly select a reordering policy .
+
+\textbf{Full vs Bandit feedback.} As expected, the bandit strategy evolves
+between the random strategy and the full feedback strategy.
+It is able to recover between \textcolor{orange}{X\%} to \textcolor{orange}{X\%}
+of the Random-FullFeedback gap.
 
 \begin{figure}[]
   \centering
@@ -1014,13 +1042,19 @@ times and aggregating by date.}
   \label{fig:mosb}
 \end{figure}
 
-Figure~\ref{fig:mosb} gives insight regarding the behavior of the
-Noisy (simulated) Feedback policy. This figure reports the share of the policies chosen
-by the strategy on average as a function of time. This is an area plot, which means
-that the height of the colored region represents the value. Moreover, the proportion of
-times each policies are chosen by the strategy is aggregated across resampled traces.
+Figure~\ref{fig:mosb} gives insight regarding the behavior of the Noisy
+(simulated) Feedback policy with $\Delta=$ 1 week. This figure reports the
+share of the policies chosen by the strategy on average as a function of time.
+This is an area plot, which means that the height of the colored region
+represents the value. Moreover, the proportion of times each policies are
+chosen by the strategy is aggregated across resampled traces.
 
-Observe that \textcolor{orange}{TODO lli  p sumlip sumlip llll sumli psumlips umlip sumil ip sumplip sumsl  ipsumul   ipsumm}.
+While this policy obtains an excellent performance, the convergence to a fixed
+policy is slow.  This is not harmful \textit{per se} and just means that the
+variability in the waiting times is indeed high. Additionally, we observe that
+the increasingly dominant policy, LCFS, is the second best overall policy. This
+is perhaps due to the estimation bias stemming from the boundary conditions of
+the weekly simulations.
 
 \begin{figure}[]
   \centering
@@ -1034,9 +1068,11 @@ Observe that \textcolor{orange}{TODO lli  p sumlip sumlip llll sumli psumlips um
 \end{figure}
 
 Figure~\ref{fig:mosn} is the analogue of Figure~\ref{fig:mosb}, this time for
-the Epsilon-Greedy policy.
+the Epsilon-Greedy policy with $\Delta$ = 1 week.
 
-Observe that \textcolor{orange}{TODO lli  p sumlip sumlip llll sumli psumlips umlip sumil ip sumplip sumsl  ipsumul   ipsumm}.
+Observe that this time the choice is much less stable. The convergence is
+extremely slow, which is expected given the variability of the reward we give
+to the bandit algorithm.
 
 \section{Conclusion}
 \label{sec:ccl}
