@@ -542,14 +542,14 @@ simulation, we introduce noise in the simulator, as described below.
 
 In order to simulate how the simulation strategy for selecting policies would
 work on non simulated traces, we randomly introduce noise in the estimate of
-the waiting time defined by Eq.~\ref{eq:cost-exact} by rescaling it, either
-down or up, for each job:
+the policy cost defined by Eq.~\ref{eq:cost-exact} by rescaling it, either
+down or up:
 %
 \begin{equation} \label{eq:cost-noisy} w_{\mbox{noisy}}(t;P_i) =
-\sum_{j=1}^{l(\Delta_t)} \rho_j \, \mbox{Wait}_j^{P_i} \end{equation}
+ \rho \sum_{j=1}^{l(\Delta_t)} \, \mbox{Wait}_j^{P_i} \end{equation}
 %
-where $\rho$ is uniformly sampled in the interval $[0.85,1.15]$, thus adding a
-+/-15\% noise on the waiting time estimated by the simulator. The overall cost
+where $\rho$ is uniformly sampled in the interval $[0.80,1.20]$, thus adding a
++/-20\% noise on the waiting time estimated by the simulator. The overall cost
 is then defined in the same way as before, leading to:
 %
 \begin{equation} \label{eq:tot-cost-noisy} w(\rightarrow T;P_i) =
@@ -977,15 +977,16 @@ strategies displayed on the graph:
   \label{tab:strat}
   \begin{tabular}{@{}lrrrrrrrrrrr@{}}
     \hline
-    Trace        & Random &      & Full &      & Noisy &      & Bandit &     \\
+    Trace        & Random &      & Full &      & Noisy &      & Bandit & \\
     \hline
     $\Delta$     & day    & week & day  & week & day   & week & day    & week\\
-    CTC-SP2      & LCFS   & LPF  & SPF  & LQF  & SQF   & SEXP & LEXP   & LRF \\
-    SDSC-SP2     & LCFS   & LPF  & SPF  & LQF  & SQF   & SEXP & LEXP   & LRF \\
-    SDSC-BLUE    & LCFS   & LPF  & SPF  & LQF  & SQF   & SEXP & LEXP   & LRF \\
-    ANL-Intrepid & LCFS   & LPF  & SPF  & LQF  & SQF   & SEXP & LEXP   & LRF \\
-    CEA-Curie    & LCFS   & LPF  & SPF  & LQF  & SQF   & SEXP & LEXP   & LRF \\
-    Unilu-Gaia   & LCFS   & LPF  & SPF  & LQF  & SQF   & SEXP & LEXP   & LRF \\
+    CTC-SP2      & -20    &      & -44  &      & -44   &      & -26    & \\
+    KTH-SP2      & -6     &      & -12  &      & -12   &      & -7     & \\
+    SDSC-SP2     & -4     &      & -13  &      & -13   &      & -5     & \\
+    SDSC-BLUE    & -12    &      & -31  &      & -30   &      & -12    & \\
+    ANL-Intrepid & -13    &      & -22  &      & -19   &      & -13    & \\
+    CEA-Curie    & -35    &      & -53  &      & -53   &      & -36    & \\
+    Unilu-Gaia   & -29    &      & -59  &      & -58   &      & -33    & \\
     \hline
   \end{tabular}
 \end{table*}
