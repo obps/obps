@@ -1,4 +1,4 @@
-\documentclass[sigconf,review,anonymous]{acmart}
+\documentclass[sigconf,anonymous]{acmart}
 \setcopyright{rightsretained}
 
 \usepackage{listings}
@@ -960,7 +960,23 @@ strategies displayed on the graph:
   \item Random $P \in P_i, 1 \le k \le 100$. ($\Delta=$1 day)
 \end{itemize}
 
-Observe that \textcolor{orange}{TODO lli  p sumlip sumlip llll sumli psumlips umlip sumil ip sumplip sumsl  ipsumul   ipsumm}.
+Table~\ref{tab:strat} reports the average total waiting time performance
+improvement over EASY(FCFS,40h) of all the proposed strategies along with the
+random variant.
+
+We make the following observations.
+
+\paragraph
+\textbf{FCFS vs Random.} Note that randomly taking a policy in the search
+set defined in ~\ref{subsec:policies} gives already a much better performance
+than EASY(FCFS). This is due
+
+\paragraph
+\textbf{Simulated Feedback finds the best policy}
+\paragraph
+\textbf{Noisy simulations are useful.}
+\paragraph
+\textbf{Full vs Bandit feedback}
 
 \begin{table*}[]
   \centering
