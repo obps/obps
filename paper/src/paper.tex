@@ -47,6 +47,8 @@
 \usepackage[draft,index]{fixme}
 \fxsetup{theme=color,mode=multiuser,layout=inline,draft}
 
+\acmConference[SC’15]{Supercomputing}{May 29 -- June 2}{Orlando, FL, USA}
+
 % correct bad hyphenation here
 %\hyphenation{op-tical net-works semi-conduc-tor}
 
@@ -837,25 +839,28 @@ this paper with automatic dependency management.
 \begin{table*}[]
   \centering
   \ra{1.3}
-  \caption{Average Cumulative waiting time improvement with respect to EASY-FCFS of fixed policies.}
+  \caption{Average total waiting time diminution of fixed policies with respect to EASY(FCFS).}
+
+  %DELTA WEEK
+
   \label{tab:full}
   \begin{tabular}{@{}lrrrrrrrrrrr@{}}
     \hline
-    Trace        & LCFS & LPF & SPF & LQF & SQF & SEXP & LEXP & LRF & SRF & LAF & SAF \\
+    Trace        & LCFS  & LPF            & SPF   & LQF            & SQF   & SEXP  & LEXP           & LRF            & SRF   & LAF          & SAF   \\
     \hline
-    KTH-SP2      & LCFS & LPF & SPF & LQF & SQF & SEXP & LEXP & LRF & SRF & LAF & SAF\\
-    CTC-SP2      & LCFS & LPF & SPF & LQF & SQF & SEXP & LEXP & LRF & SRF & LAF & SAF\\
-    SDSC-SP2     & LCFS & LPF & SPF & LQF & SQF & SEXP & LEXP & LRF & SRF & LAF & SAF\\
-    SDSC-BLUE    & LCFS & LPF & SPF & LQF & SQF & SEXP & LEXP & LRF & SRF & LAF & SAF\\
-    ANL-Intrepid & LCFS & LPF & SPF & LQF & SQF & SEXP & LEXP & LRF & SRF & LAF & SAF\\
-    CEA-Curie    & LCFS & LPF & SPF & LQF & SQF & SEXP & LEXP & LRF & SRF & LAF & SAF\\
-    Unilu-Gaia   & LCFS & LPF & SPF & LQF & SQF & SEXP & LEXP & LRF & SRF & LAF & SAF\\
+    ANL-Intrepid & -25\% & -9\%           & -3\%  & \textbf{-28\%} & -2\%  & -21\% & -24\%          & -21\%          & -10\% & -19\%        & +5\%  \\
+    KTH-SP2      & -13\% & \textbf{-16\%} & +5\%  & \textbf{-16\%} & +3\%  & -8\%  & -15\%          & -8\%           & -13\% & -12\%        & +15\% \\
+    CTC-SP2      & -40\% & -19\%          & -14\% & \textbf{-47\%} & +15\% & -36\% & -19\%          & -38\%          & -12\% & -44\%        & +22\% \\
+    SDSC-SP2     & -8\%  & \textbf{-15\%} & +4\%  & -8\%           & +4\%  & -3\%  & \textbf{-15\%} & -3\%           & -10\% & -11\%        & +18\% \\
+    SDSC-BLUE    & -26\% & -29\%          & 0\%   & -29\%          & +17\% & -17\% & -26\%          & -15\%          & -15\% & \textbf{-32\%} & +23\% \\
+    CEA-Curie    & -46\% & -23\%          & -45\% & \textbf{-57\%} & -19\% & -51\% & -23\%          & \textbf{-57\%} & -24\% & -40\%        & -17\% \\
+    Unilu-Gaia   & -58\% & -33\%          & -10\% & \textbf{-62\%} & +16\% & -49\% & -27\%          & -56\%          & -16\% & -62\%        & +20\% \\
     \hline
   \end{tabular}
 \end{table*}
 
 We begin by attracting the attention of the reader to Table~\ref{tab:full},
-which reports the average cumulative waiting time performance improvement over
+which reports the average total waiting time performance improvement over
 EASY(FCFS,40h) of all the fixed policies defined in ~\ref{subsec:policies}. More
 precisely, let us denote the resampled traces of a given workload by $T_k$,
 where k is the index of the resampled trace ($1 \le k \le 100$). We also denote
@@ -874,11 +879,19 @@ So that the values appearing in Table~\ref{tab:full} are exactly:
   \bar{w}(T_k,\text{EASY}(\text{FCFS},40h))}{\sum_{k=1}^{k=100}\bar{w}(T_k,\text{EASY}(\text{FCFS},40h))}
 \end{equation}
 
-Observe that \textcolor{orange}{TODO lli  p sumlip sumlip llll sumli psumlips umlip sumil ip sumplip sumsl  ipsumul   ipsumm}.
+The best values are outlined in bold in the table. These values give the best
+attainable performance in the search set defined in~\ref{subsec:policies}.
+Note that there seems to be some regularity; the SAF policy is remarkably
+inefficient for instance, and the LQF policy works very well. However, note
+that there are traces for which LQF is not optimal. Moreover, these
+are~\textit{a-posteriori} results, which means that we only know post-factum
+that this policy would have been better. In the present work, we are
+studying adaptive policies that obtain a good performance on any given system
+by selecting one of these policies.
 
 \begin{figure}[]
   \centering
-  \includegraphics[scale=0.6]{figures/week-full-ANL-Intr.pdf}
+  \includegraphics[scale=0.6]{figures/full-ANL-Intr.pdf}
   \caption{Evolution of the average cumulative waiting time improvement
     compared to EASY-FCFS of the policies $P_i$ for $i = 1 \ldots 10$ on the
     UniLu-Gaia trace. The average is obtained by resampling the original trace
@@ -887,16 +900,24 @@ Observe that \textcolor{orange}{TODO lli  p sumlip sumlip llll sumli psumlips um
   \label{fig:all}
 \end{figure}
 
-Figure~\ref{fig:all} reports the evolution of this quantity for the UniLu-Gaia
-trace, which means that it shows how the average improvement in cumulative
-waiting time evolves as a function of time. In other words, this is the average
-curve obtained if one were to plot the cumulative sum of job waiting times for
-every resampled trace, incrementing the sum when a job finishes. Accordingly,
-the final values attained by every curve correspond exactly to the values
-reported in Table~\ref{tab:full}. The dashed values represent the 10th and 90th
-percentile of the values.
+Figure~\ref{fig:all} reports the evolution of the average cumulative waiting
+time for the UniLu-Gaia tis quantityrace, which means that it shows how the
+average improvement in cumulative waiting time evolves as a function of time.
+In other words, this is the average curve obtained if one were to plot the
+cumulative sum of job waiting times for every resampled trace, incrementing the
+sum when a job finishes. Accordingly, the final values attained by every curve
+correspond exactly to the values reported in Table~\ref{tab:full}. The dashed
+values represent the 10th and 90th percentile of the values.
 
-Observe that \textcolor{orange}{TODO}
+Observe that while the 10th and 90th percentiles of the improvement with
+respect to EASY-FCFS are large, the values are still contained enough to make
+definite statements about how these policies compare to the FCFS baseline.
+This figure does not report the variability of the policies against one another,
+and does not allow to compare them beyong comparing their average performance.
+However, the fact that the band of percentiles are roughly of the size of half
+the best attainable improvement was our original motivation for this work, as
+one can expect to be able to distinguish between these policies in an
+online manner.
 
 \begin{figure*}[]
   \centering
@@ -927,9 +948,10 @@ figure is followed-up in figure~\ref{fig:follow} for the UniLu-Gaia log.}
 \end{figure}
 
 Figures~\ref{fig:small} and~\ref{fig:follow} report the main experimental
-result concerning the strategies proposed in this paper. These figures show the average cumulative improvement
-of over EASY(FCFS,40h) of the three strategies we propose in the same format as Figure~\ref{fig:all}.
-There are four strategies displayed on the graph:
+result concerning the strategies proposed in this paper. These figures show the
+average cumulative improvement of over EASY(FCFS,40h) of the three strategies
+we propose in the same format as Figure~\ref{fig:all}.  There are four
+strategies displayed on the graph:
 
 \begin{itemize}
   \item Full (simulated) Feedback ($\Delta=$1 day)
