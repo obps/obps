@@ -1,30 +1,27 @@
-{ stdenv, fetchFromGitHub, ocaml, findlib, ocamlbuild, opam, ocaml_batteries, topkg, obandit, cmdliner }:
+{ stdenv, fetchzip, ocaml, findlib, ocamlbuild, opam, ocaml_batteries, topkg,  cmdliner }:
 
 stdenv.mkDerivation rec {
-	name = "obandit-${version}";
+	name = "ocs-${version}";
 	version = "0.2";
 
-  src = ../../ocst;
+  src = ../../ocst ;
 
-  #src = fetchFromGitHub {
-    #owner = "freuk";
-    #repo = "ocst";
-    #rev = "9872b40a4c0d7213b69a2b6c8c555b44bd7ca644";
-    #sha256 = "1l40w41g3zjjjml84brnbr1ml7mzs4vx41viwmpyivn05ah7nykl";
+  #src = fetchzip {
+    #url= https://zenodo.org/record/439758/files/freuk/ocst-zenodo-up.zip;
+    #sha256 = "1aqwzagjwf7p0v3gqnjcr3v9pfwpkgm0h5bdik4dm29fzzak5r71";
   #};
 
 	unpackCmd = "tar xjf $src";
 
-	buildInputs = [ ocaml findlib ocamlbuild topkg opam ];
+	buildInputs = [ ocaml_batteries ocaml findlib ocamlbuild topkg opam ];
 
-  propagatedBuildInputs = [ ocaml_batteries obandit cmdliner ];
+  propagatedBuildInputs = [ ocaml_batteries cmdliner ];
 
-	inherit (topkg) buildPhase installPhase;
+  inherit (topkg) buildPhase installPhase;
 
 	meta = {
 		license = stdenv.lib.licenses.isc;
-		homepage = http://erratique.ch/software/rresult;
-		description = "Result value combinators for OCaml";
+		description = "Ocabl backfilling simulator.";
 		inherit (ocaml.meta) platforms;
 	};
 }

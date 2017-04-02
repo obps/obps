@@ -1,6 +1,5 @@
-#traces= ANL-Intrepid CEA-Curie CTC-SP2 KTH-SP2 SDSC-BLUE SDSC-SP2 UniLu-Gaia
-
-traces= CTC-SP2 KTH-SP2
+traces= ANL-Intrepid CEA-Curie CTC-SP2 KTH-SP2 SDSC-BLUE SDSC-SP2 UniLu-Gaia
+#traces= CTC-SP2 KTH-SP2
 
 policyfam_full = wait mwait lpf spf lqf sqf expfact mexpfact lrf srf laf saf
 

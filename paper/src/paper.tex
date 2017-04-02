@@ -47,7 +47,7 @@
 \usepackage[draft,index]{fixme}
 \fxsetup{theme=color,mode=multiuser,layout=inline,draft}
 
-\acmConference[SC’15]{Supercomputing}{May 29 -- June 2}{Orlando, FL, USA}
+\acmConference[SC’17]{Supercomputing}{May 29 -- June 2}{Orlando, FL, USA}
 
 % correct bad hyphenation here
 %\hyphenation{op-tical net-works semi-conduc-tor}
@@ -168,14 +168,14 @@ open-sourced and packaged for the community.
 Our main results are as follows: The approach based on the simulator provides
 very good results, close to the best policy in the search set. In essence, this
 means that we are able to recover in an online fashion existing results that
-divide average waiting times by factor of \textcolor{orange}{X} to
-\textcolor{orange}{X}. Indeed, we show that the required sample sizes for
-policy selection in batch schedulers are small enough for workload resampling to
-be avoided in practice. The variant based on noisy data, which is closer to
-actual conditions of uncertainties on both jobs and platform, also behaves very
-well. The alternate approach based on a multi-armed bandit also provides
-reasonable results at a much lower cost, dividing the average waiting times by
-a factor of \textcolor{orange}{X} to \textcolor{orange}{X}.
+reduce average waiting times between -11\% and -60\% compared to EASY-FCFS.
+Indeed, we show that the required sample sizes for policy selection in batch
+schedulers are small enough for workload resampling to be avoided in practice.
+The variant based on noisy data, which is closer to actual conditions of
+uncertainties on both jobs and platform, also behaves very well. The alternate
+approach based on a multi-armed bandit also provides reasonable results at a
+much lower cost, reducing the average waiting times down to between -8\% and
+-46\% compared to EASY-FCFS.
 
 Let us emphasize the main results of this study: While the First-Come,
 First-Serve approach to minimizing the waiting times is a common default
@@ -973,20 +973,20 @@ strategies displayed on the graph:
 \begin{table*}[]
   \centering
   \ra{1.3}
-  \caption{Average Cumulative waiting time improvement with respect to EASY-FCFS of fixed policies.}
+  \caption{Average Cumulative waiting time improvement of the proposed policies with respect to EASY(FCFS).}
   \label{tab:strat}
   \begin{tabular}{@{}lrrrrrrrrrrr@{}}
     \hline
-    Trace        & Random &      & Full &      & Noisy &      & Bandit & \\
+    Trace        & Random &       & Full  &       & Noisy &       & Bandit & \\
     \hline
-    $\Delta$     & day    & week & day  & week & day   & week & day    & week\\
-    CTC-SP2      & -20    &      & -44  &      & -44   &      & -26    & \\
-    KTH-SP2      & -6     &      & -12  &      & -12   &      & -7     & \\
-    SDSC-SP2     & -4     &      & -13  &      & -13   &      & -5     & \\
-    SDSC-BLUE    & -12    &      & -31  &      & -30   &      & -12    & \\
-    ANL-Intrepid & -13    &      & -22  &      & -19   &      & -13    & \\
-    CEA-Curie    & -35    &      & -53  &      & -53   &      & -36    & \\
-    Unilu-Gaia   & -29    &      & -59  &      & -58   &      & -33    & \\
+    $\Delta$     & week   & day   & week  & day   & week  & day   & week   & day \\
+    CTC-SP2      & -20\%  & -23\% & -44\% & -44\% & -44\% & -44\% & -26\%  & -31\% \\
+    KTH-SP2      & -6\%   & -8\%  & -12\% & -11\% & -12\% & -12\% & -7\%   & -10\% \\
+    SDSC-SP2     & -4\%   & -7\%  & -13\% & -13\% & -13\% & -13\% & -5\%   & -8\% \\
+    SDSC-BLUE    & -12\%  & -14\% & -31\% & -31\% & -30\% & -29\% & -12\%  & -17\% \\
+    ANL-Intrepid & -13\%  & -20\% & -22\% & -26\% & -19\% & -24\% & -13\%  & -20\% \\
+    CEA-Curie    & -35\%  & -42\% & -53\% & -47\% & -53\% & -48\% & -36\%  & -46\% \\
+    Unilu-Gaia   & -29\%  & -31\% & -59\% & -60\% & -58\% & -58\% & -33\%  & -34\% \\
     \hline
   \end{tabular}
 \end{table*}
@@ -1028,9 +1028,9 @@ hope that an imprecise but unbiased reporting of the performance is enough to
 rapidly select a reordering policy .
 
 \textbf{Full vs Bandit feedback.} As expected, the bandit strategy evolves
-between the random strategy and the full feedback strategy.
-It is able to recover between \textcolor{orange}{X\%} to \textcolor{orange}{X\%}
-of the Random-FullFeedback gap.
+between the random strategy and the full feedback strategy. The bandit-based
+strategy always fares better with a shorter period $\Delta$, recovering between
+a quarter to the whole gap between the Random and Full Feedback strategies.
 
 \begin{figure}[]
   \centering
@@ -1093,10 +1093,10 @@ to considerable gains in performance.
 
 This approach was used in two methods: a method based on a simulator and a
 method based on a multi-armed bandit algorithm. The first one provides very good results,
-improving the average waiting times of the baseline FCFS ordering policy by a
-factor of \textcolor{orange}{X} to \textcolor{orange}{X} The second one is
-slighly less efficient with an improvement factor of  \textcolor{orange}{X} to
-\textcolor{orange}{X}. However, it is more easy to use and less costly to run.
+reducing the average waiting times of the baseline FCFS ordering policy by a
+factor of -11\% to -60\%. The second one is
+slighly less efficient with an improvement factor of -8\% to
+-46\%. However, it is easier to use and less costly to run.
 
 There are two directions for extensions of this work.  First, the question of
 the existence of a more efficient selection strategy for bandit feedback for
@@ -1267,13 +1267,12 @@ This allows to use the following command-line tools:
 
    \item[simulation]: This step runs the lightweight ocaml backfilling
      simulator specially written for this work. this simulator is made
-     available under the isc~\cite{isc} license both as a persistent zenodo
-     archive at~\cite{ocst} and as a git repository at ~\cite{ocstgit}.
+     available under the isc~\cite{isc} license as a persistent zenodo
+     archive at~\cite{ocst}.
 
    \item[analysis]: This step runs r code that generates the figures
      presented in this paper.
  \end{itemize}
-
 
 \subsection{Evaluation and expected result}
 

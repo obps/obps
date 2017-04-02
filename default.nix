@@ -2,15 +2,13 @@
 let
   callPackage = pkgs.lib.callPackageWith (pkgs // pkgs.xlibs // self);
   self = rec {
-    obandit = pkgs.ocamlPackages.callPackage pkgs/obandit { };
     zymake = pkgs.ocamlPackages.callPackage pkgs/zymake { };
-    ocs = pkgs.ocamlPackages.callPackage pkgs/ocs { inherit obandit; };
+    ocs = pkgs.ocamlPackages.callPackage pkgs/ocs { };
     banditSelection=pkgs.stdenv.mkDerivation rec {
       name = "banditSelection";
       src = ./.;
       buildInputs =
       [
-        obandit
         zymake
         ocs
         pkgs.pythonPackages.docopt
