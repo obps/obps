@@ -656,11 +656,11 @@ experimental results and their discussion.
 \subsection{Experimental Protocol}
 \label{sub:protocol}
 
-The Evaluation of computer systems performance is an intricate
-task\cite{feitbook}. Here, the two main difficulties are choosing a simulation
+The Evaluation of computer systems performance is a complex
+task. Here, the two main difficulties are choosing a simulation
 model and taking into account the variability in the average waiting times.
-This section presents our approach and provides a replicable workflow
-for the interested reader.
+This section presents our approach, which is based on lightweight simulation
+and trace resampling.
 
 \subsubsection{Traces}
 \label{sub:traces}
@@ -737,30 +737,38 @@ PowerEdge R730 in 22 hours, including input preparation and analysis code.
 \subsubsection{Resampling}
 \label{ssub:resampling}
 
-%Validating algorithms on real data is a notoriously hard
-%problem~\cite{feitbook}. The case of batch scheduling is made especially
-%difficult by the fluctuations in commonly used metrics~\cite{jsm}. Indeed, the
-%variability in performance is known to outrank the available sample sizes:
-%\textit{It is not enough to simply replay an algorithm using a trace}. For this
-%reason, we clearly expose our statistical approach.
+Comparing algorithms in batch scheduling is made especially difficult by the
+fluctuations in commonly used metrics~\cite{jsm}. The variability in
+performance is known to outrank the available sample sizes: \textit{It is not
+enough to simply replay an algorithm using a workload trace}. Indeed, as
+presented in Figure~\ref{fig:variability}, the objective function we are using
+in this work is subject to high variability. This variability can be so extreme
+that even a timeframe of a fews years can be insufficient to compare scheduling
+algorithms. In our experience inverting some months in the trace at random can
+lead to reversal in the results. This motivated decades of research in workload
+modeling~\cite{feitbook}. A recent approach~\cite{feitresampling} proposes to
+resample data directly from the original traces. In this work, we use a simple
+implementation of these ideas.  More precisely, we want to sample the job
+submission process, which is achieved in the following manner: For evey week in
+a resampled trace, we iterate over every existing user in the original trace.
+For each of these users, we choose a week of the original trace uniformly at
+random. The jobs from this user in this original week are chosen to be present
+in the week being resampled.  This simple mechanism enables us to preserve the
+dependency within a week.  Although the system state may not be independent
+from one week to an other, we rely on existing work~\ref{jsspp17} and assume
+for these experiments that the system is in a stationary state. While we
+do provide guidelines as how to incorporate tracking variant of our algorithms
+in~\ref{sec:online} by introducing a decaying discount factor $\lambda$,
+this will not be studied in the experiments from this paper, and is left for
+future research.
 
-%Two main methods are available in order to generate data. On one hand, it is
-%possible to model~\cite{feitperfeval} workloads. However, this often loses
-%many specificities of the original data, and this work uses a second
-%approach based on trace resampling~\cite{feitresampling}.
-
-To carry our experiments, we need to generate many trace samples. More
-precisely, we want to sample the job submission process, which is achieved by
-splitting the traces in weeks, randomly shuffling them and picking the jobs
-submitted in the selected weeks.  This simple mechanism enables us to preserve
-the dependency within a week. Although the system state may not be independent
-from one week to an other, we can reasonably assume that it evolves under its
-stationary distribution. Thus, computing an average over the sampled traces at
-a given time can be related to a time average of an underlying Markov process,
-which converges to the true quantity thanks to the ergodic theorem.  Moreover,
-the job submission process has no long range correlation making it look like an
-independent and identically distributed process when considering sufficiently
-time spaced weeks.
+%Thus,
+%computing an average over the sampled traces at a given time can be related to
+%a time average of an underlying Markov process, which converges to the true
+%quantity thanks to the ergodic theorem.  Moreover, the job submission process
+%has no long range correlation making it look like an independent and
+%identically distributed process when considering sufficiently time spaced
+%weeks.
 
 \subsubsection{Experimental campaign}
 
