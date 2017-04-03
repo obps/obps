@@ -91,10 +91,9 @@
   policy of the job queue under several feedback modes. We show via a
   comprehensive experimental campaign that noisy feedback (using a weak
   simulator) recovers existing in-hindsight results that allow to divide the
-  average waiting time up to a factor of 2. Moreover, we show that bandit
-  feedback can be used by a simple multi-armed bandit algorithm to decrease the
-  average waiting time down to 40\% of its original value without using a
-  simulator.
+  average waiting time by almost 2. Moreover, we show that bandit feedback can
+  be used by an epsilon-greedy algorithm to cut the average waiting time by
+  40\% without using a simulator.
 
 \end{abstract}
 
@@ -116,10 +115,10 @@ of the community is to design efficient sustained Petascale platforms. This
 large-scale evolution and the increasing complexity in both architecture and
 applications create many scientific and technical problems. Accordingly, system
 management software still has a long way to go. The existing job and resource
-management softwares allow to run tens of thousands of jobs on hundreds of thousands
+management software allow to run tens of thousands of jobs on hundreds of thousands
 of cores. They are based on robust policies, however, despite their positive
 properties such as relative simplicity and prevention of job starvation,
-there is still room for improvement. We propose here to study how to tune the
+there is still room for improvement. Here, we propose to study how to tune the
 ordering of the submission queues in the frame of the classical
 EASY-BackFilling family of heuristics using two new online learning approaches
 (an approach based on a simulator and an approach using multi-armed bandit).
@@ -136,7 +135,7 @@ times, memory requirements, etc.) via prediction. However, only few studies
 evaluate the impact of such techniques on the performances of the resource
 manager.
 
-Contrarily to most existing studies, which consider the learning of specific
+Unlike most existing studies, which consider the learning of specific
 parameters of a trace, we provide a complete system that uses feedback from the
 system for adapting the whole behavior online.  Our focus within this work is
 to learn how the management system behaves within the usual framework of
@@ -148,7 +147,7 @@ actual traces.
 \subsection{Contributions}
 
 Our main contribution is to investigate two original methods for learning a
-good scheduling policy on a per-system basis. We focus in this work on the
+good scheduling policy on a per-system basis. In this work, we focus on the
 average waiting time of the jobs. Each method aims to choose the best queue
 reordering policy in a fixed search set of semantically diverse options.
 
@@ -158,43 +157,43 @@ uncertainties in the data, we also evaluate a more realistic "noisy" variant in
 which simulations are imprecise.
 
 The second method (bandit feedback) is a simulator-less approach based on a
-multi-armed bandit algorithm that derives feedback by measuring system
+multi-armed bandit algorithm, which derives feedback by measuring system
 performance.
 
-Both of these methods are evaluated with a specially developped simulator that is
-open-sourced and packaged for the community.
+Both of these methods are evaluated with a specifically developed simulator,
+which is open-sourced and packaged for the community.
 
 
 Our main results are as follows: The approach based on the simulator provides
-very good results, close to the best policy in the search set. In essence, this
-means that we are able to recover in an online fashion existing results that
-reduce average waiting times between -11\% and -60\% compared to EASY-FCFS.
-Indeed, we show that the required sample sizes for policy selection in batch
-schedulers are small enough for workload resampling to be avoided in practice.
-The variant based on noisy data, which is closer to actual conditions of
-uncertainties on both jobs and platform, also behaves very well. The alternate
-approach based on a multi-armed bandit also provides reasonable results at a
-much lower cost, reducing the average waiting times down to between -8\% and
--46\% compared to EASY-FCFS.
+very good results, close to the best policy in the search set. In essence, we
+are able to recover in an online fashion existing results that reduce average
+waiting times by 11\% to 60\% compared to EASY-FCFS.  Indeed, we show
+that the required sample sizes for policy selection in batch schedulers are
+small enough for workload resampling to be avoided in practice.  The variant
+based on noisy data, which is closer to the actual conditions of uncertainties on
+both jobs and platform, also behaves very well. The alternate approach based on
+a multi-armed bandit also provides reasonable results at a much lower cost,
+reducing the average waiting times by 8\% to 46\% compared to
+EASY-FCFS.
 
 Let us emphasize the main results of this study: While the First-Come,
 First-Serve approach to minimizing the waiting times is a common default
 strategy, it can absolutely be outperformed.  We show how to automate selection
-of a good alternative policy in two cases (depending whether a simulator is
+of a good alternative policy in two cases (depending on whether a simulator is
 available or not), and provide the difference in performance to be expected
 between both situations.
 
 \section{Related Work}
 \label{sec:rw}
 
-This section presents and discuss the most significant results related to job
+This section presents and discusses the most significant results related to job
 scheduling and learning algorithms in this context.  Let us start by recalling
 some basics about scheduling heuristics in HPC platforms:
 
 Parallel job scheduling is a old studied theoretical
 problem~\cite{Frachtenberg:2009:JSS:1692356,Feitelson:2004:PJS:2128864.2128865}
 whose practical ramifications, varying hypotheses, and inherent uncertainty of
-the problem applied on the HPC field have driven practitioners to use simple
+the problem applied to the HPC field have driven practitioners to use simple
 heuristics (and researchers to study their behavior). The two most popular
 heuristics for HPC platforms are EASY~\cite{easy} and
 Conservative~\cite{Mu'alem:2001:UPW:380314.380315} backfillings.
@@ -204,8 +203,8 @@ significant computational overhead, which mainly explains why most of the
 machines of the top500 ranking~\cite{top500} rather use a variant of EASY-BF
 instead.  There is a large body of work seeking to improve/tune EASY. Indeed,
 while the basic mechanism is used by some actual resource and job management
-softwares (most notably SLURM~\cite{SLURMdocSCHED}), this is rarely done
-without fine tunings by system administrators.
+software (most notably SLURM~\cite{SLURMdocSCHED}), this is rarely done
+without fine tuning by system administrators.
 
 The original EASY mechanism refers to a First-Come-First-Serve basis.  Several
 works explore how to tune EASY by reordering waiting and/or backfilling
@@ -217,7 +216,7 @@ these studies most often report \textit{post-hoc} performance since they
 compare algorithms after the workload is known.
 
 The dynP scheduler~\cite{streit_selftuning_2002} proposes a systematic
-method to tuning these queues, although it requires simulated scheduling runs
+method to tunine these queues, although it requires simulated scheduling runs
 at decision time and therefore, it costs much more than the natural execution of EASY.
 
 \subsection{Data-aware resource management.}
@@ -238,13 +237,13 @@ probabilistic integration procedures~\cite{Nissimov2008}.  However, these works
 do not address the duality between the cumulative and maximal scheduling costs,
 as mentioned in~\cite{learningruntimes}. While these previous works intend to
 estimate uncertain parameters, we consider here a more pragmatic approach,
-which directly learn a good scheduling policy from a given policy space.
+which directly learns a good scheduling policy from a given policy space.
 
 Existing work~\cite{jsspp17} takes this approach in an offline manner, by
-splitting workload data in a training/testing fashion. This work studied
+splitting workload data in a training/testing fashion. This work studies
 EASY-Backfilling and shows that the relative performance of some well-known
 priority orders for starting jobs differs between workloads, but is relatively
-stable troughout time for a given workload.
+stable over time for a given workload.
 
 \subsection{Multi-Armed Bandits.}
 
@@ -252,14 +251,14 @@ A multi-armed bandit (MAB) problem is a sequential allocation problem with
 partially observable rewards. At every round, an action (represented by an arm
 of the Bandit) must be chosen in a fixed set and the corresponding reward is
 observed. The goal of a MAB algorithm is to maximize the total reward obtained
-in a successive number of rounds.  There exist a bunch of works that address
+in a successive number of rounds. There exist multiple works addressing
 this problem under a variety of constraints, The two most popular settings are
 the original stochastic  case and the adversarial case. See~\cite{thompson} for
 the original work on the stochastic case and~\cite{Auer2002} for the "Upper
 Confidence Bound" family of algorithms. According to our knowledge, the work
-of~\cite{Banos} is the earliest known work to us for the adversarial case
+of~\cite{Banos} is the earliest for the adversarial case;
 see~\cite{nonstoch} for the "Exponential-weight" family of algorithms. We refer
-to the review~\cite{bubnow} for a comprehensive overview of the field. While
+to~\cite{bubnow} for a comprehensive review of the field. While
 these algorithms bound the cumulative difference in loss to the best arm (the
 regret), they have functional constraints such as the fact that the rewards
 should be contained in a range. A simple heuristic called
@@ -317,18 +316,18 @@ the provided value.
 \subsection{Brief description of EASY Backfilling}
 \label{sub:easy}
 
-The selection of the job to run is performed according to a scheduling policy
-that establishes the order in which the jobs are executed.  EASY-Backfilling is
+The selection of the job to run is performed according to a scheduling policy,
+which determines the order in which the jobs are executed. EASY-Backfilling is
 the most widely used policy due to its simple and robust implementation and
 known benefits such as high system utilization~\cite{easy}. This strategy has
 no worst case guarantee beyond the absence of starvation (i.e. every job will
 be scheduled at some moment).
 
 The EASY-FCFS heuristic uses a job queue to select and backfill jobs.  At any
-time that requires a scheduling decision (i.e. job submission or termination),
+time requiring a scheduling decision (i.e. job submission or termination),
 the scheduler goes through the job queue in First-Come,First-Serve (FCFS) order
-and starts jobs until it finds a job that can not be started right away. It
-then makes a reservation for this job at the earliest predictable time and
+and starts jobs until it finds a job that can not be started right away. Then,
+it makes a reservation for this job at the earliest predictable time and
 starts \textit{backfilling} the job queue in FCFS order, starting any job that
 does not delay the unique reservation.
 
@@ -449,7 +448,7 @@ Algorithm~\ref{alg:EASY} describes the EASY($P,\Theta$) heuristic.
   \label{fig:variability}
 \end{figure*}
 
-We present here the strategies we have retained for selecting a policy. We will
+Here, we present the strategies we have retained for selecting a policy. We will
 refer to the period during which a selected policy is applied as the
 \textit{policy period} and will denote the length of this period as $\Delta$.
 The time interval is thus divided into periods of equal lengths ($\Delta$):
@@ -458,7 +457,7 @@ period. A new policy is selected at the beginning of each period and applied
 during the whole period.
 
 We further assume that there is a certain regularity among periods,
-\textit{i.e.} that the distributions underlying the jobs submitted do not
+\textit{i.e.} that the distribution of the job submission process does not
 radically differ between consecutive periods. This assumption is validated in
 the study presented in~\cite{jsspp17}. It further entails that the behavior of
 a policy on the previous periods reflects its behavior on the current one, so
@@ -578,7 +577,7 @@ time. However, this requires computing many estimates at each period (as many
 as there are policies), which can be time consuming or cumbersome even with
 lightweight simulators.
 
-We thus explore here a more efficient strategy that dispenses with estimating
+Thus, we explore here a more efficient strategy that dispenses with estimating
 the cost of all policies at a given time and only updates the cost of the
 policy that is currently being used. This strategy makes use of the
 $\epsilon$-greedy exploration method, standard in reinforcement learning
@@ -616,7 +615,7 @@ The cost over all previous period of a policy $P_i$ is then defined as:
 %
 where $\mathbbm{1}(P_i,t) = 1$ if $P_i$ is the policy used during the period
 $\Delta_t$ and $0$ otherwise. The normalization by $\sum_{t=0}^{T-1}
-\mathbbm{1}(P_i,t) l(\Delta_t)$ is necessary here to ensure that policies
+\mathbbm{1}(P_i,t) l(\Delta_t)$ is necessary to ensure that policies
 remain comparable over time, as not normalizing would favor the policy that was
 first selected, even if this choice was random. This normalization however
 entails that the size of the policy period is important: it should not be too
@@ -660,13 +659,13 @@ simple $\epsilon$-greedy method.
 
 This section compares the different approaches to policy selection via a
 comprehensive experimental campaign.  Subsection~\ref{sub:protocol} outlines
-the experimental protocol used and Subsection~\ref{sub:results} contains the
+our experimental protocol and Subsection~\ref{sub:results} contains the
 experimental results and their discussion.
 
 \subsection{Experimental Protocol}
 \label{sub:protocol}
 
-The Evaluation of computer systems performance is a complex
+The evaluation of computer systems performance is a complex
 task. Here, the two main difficulties are choosing a simulation
 model and taking into account the variability in the average waiting times.
 This section presents our approach, which is based on lightweight simulation
@@ -738,8 +737,8 @@ system. We develop a lightweight simulator\cite{ocst} and release it to the
 community. See the reproducibility paragraph below for more information.  With
 this simulator, we are able to replay EASY-FCFS on the CEA-CURIE trace in 33
 seconds with a machine equipped with an Intel(R) Core(TM) i5-4310U CPU @
-2.00GHz. As a point of comparison, the Batsim simulator with no network
-communication modeling and no resource contiguity takes more than 7 hours to
+2.00GHz. As a comparison, the Batsim simulator with network
+communication modeling disabled and no resource contiguity takes more than 7 hours to
 replay the same trace on the same hardware. The complete simulation campaign
 presented below is executed on a single Dell PowerEdge R730 in 22 hours,
 including input preparation and analysis code.
@@ -768,7 +767,7 @@ dependency within a week.  Although the system state may not be independent
 from one week to an other, we rely on existing work~\cite{jsspp17} and assume
 for these experiments that the system is in a stationary state. While we
 do provide guidelines as how to incorporate tracking variant of our algorithms
-in~\ref{sec:online} by introducing a decaying discount factor $\lambda$,
+in Section~\ref{sec:online} by introducing a decaying discount factor $\lambda$,
 this will not be studied in the experiments from this paper, and is left for
 future research.
 
@@ -783,11 +782,11 @@ future research.
 \subsubsection{Experimental campaign}
 
 We use devise the following experimental campaign. For each of the 7 workloads
-considered, we use the original data to resample 60 traces, each of a length
+considered, we use the original data to resample 60 traces, each with a length
 of two years. For each resampled trace, we run simulations using the
 EASY($P,\Theta$) scheduling heuristic. We fix the value of the job waiting time
 threshold $\Theta$ at 40 hours, a sane default. The choice of this default
-stems from the analysis developped in ~\cite{jsspp17}. This value is high
+stems from the analysis developed in ~\cite{jsspp17}. This value is high
 enough for queue reorderings to be leveraged while being low enough to provide
 the functional requirement of preventing starvation. We simulate
 EASY($P,\Theta=40h$) using the following strategies:
@@ -803,7 +802,7 @@ EASY($P,\Theta=40h$) using the following strategies:
   \item The simulation-based ("full feedback") strategy with hyperparameter
     $\Delta \in \left\{ 1 \text{day},1 \text{week} \right\}$. This choice of
     hyperparameter is a consequence of the natural rythm of human activity:
-    daily or weekly simulation periods seems to facilitate comparability of
+    daily or weekly simulation periods seem to facilitate comparability of
     performance between two periods. Indeed, arbitrary period values would
     needlessly increase the variability of the cost metric.
 
@@ -824,7 +823,7 @@ EASY($P,\Theta=40h$) using the following strategies:
 
 \end{itemize}
 
-The experiment campaign consists of 7 traces $\times$ 60 resamples $\times$
+The experimental campaign consists of 7 traces $\times$ 60 resamples $\times$
 (12+2+2+2) algorithms, which equate to 12600 scheduling simulations spanning
 two years.  This means a total simulated timespan of 25200 years. Moreover,
 both the full-feedback and noisy feedback strategies will also be calling
@@ -867,14 +866,13 @@ this paper with automatic dependency management.
   \end{tabular}
 \end{table*}
 
-We begin by attracting the attention of the reader to Table~\ref{tab:full},
-which reports the average total waiting time performance improvement over
-EASY(FCFS,40h) of all the fixed policies defined in ~\ref{subsec:policies}. More
-precisely, let us denote the resampled traces of a given workload by $T_k$,
-where k is the index of the resampled trace ($1 \le k \le 60$). We also denote
-the number of jobs in the resampled trace $T_k$ by $l(T_k)$. We denote by
-$\bar{w}(T_k,S)$ the cumulative waiting time obtained by a simulation run for a
-strategy $S$:
+We begin by drawing the attention of the reader to Table~\ref{tab:full}, which
+reports the average total waiting time performance improvement over
+EASY(FCFS,40h) of all the fixed policies defined in ~\ref{subsec:policies}. Let
+us denote the resampled traces of a given workload by $T_k$, where k is the
+index of the resampled trace ($1 \le k \le 60$). We also denote the number of
+jobs in the resampled trace $T_k$ by $l(T_k)$. We denote by $\bar{w}(T_k,S)$
+the cumulative waiting time obtained by a simulation run for a strategy $S$:
 
 \begin{equation}
   \bar{w}(T_k,P) = \sum_{j=1}^{l(T_k)} \text{Wait}_j^{P}
@@ -1079,7 +1077,7 @@ to the bandit algorithm.
 \label{sec:ccl}
 
 The scheduling of parallel jobs on a given HPC platform is a very hard
-optimization problem with many uncertain parameters. Even thought these
+optimization problem with many uncertain parameters. Even though these
 uncertainties could be reduced, determining efficient strategies remains
 difficult.
 
@@ -1087,18 +1085,18 @@ We presented in this work a new way of addressing this problem.  The idea was
 to look at the level of the scheduling process instead of trying to change its
 parameters.
 
-More precisely, we showed that it is worth to learn on the scheduling process
+More precisely, we showed that it is worth learning on the scheduling process
 itself. Indeed, reordering the submission queues under EASY-BackFilling leads
 to considerable gains in performance.
 
 This approach was used in two methods: a method based on a simulator and a
-method based on a multi-armed bandit algorithm. The first one provides very good results,
-reducing the average waiting times of the baseline FCFS ordering policy by a
-factor of -11\% to -60\%. The second one is
-slighly less efficient with an improvement factor of -8\% to
--46\%. However, it is easier to use and less costly to run.
+method based on a multi-armed bandit algorithm. The first one provides very
+good results, reducing the average waiting times of the baseline FCFS ordering
+policy by 11\% to 60\%. The second one is slighly less efficient with an
+improvement factor of 8\% to 46\%. However, it is easier to use and cheaper
+to run.
 
-There are two directions for extensions of this work.  First, the question of
+There are two directions to extend this work.  First, the question of
 the existence of a more efficient selection strategy for bandit feedback for
 these systems is not addressed by this work. Is a simulator really necessary?
 %@Denis: a essayer.. 1 mois de travail pour tester?
