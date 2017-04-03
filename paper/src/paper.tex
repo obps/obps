@@ -902,7 +902,7 @@ given system by selecting one of these policies.
 
 \begin{figure}[]
   \centering
-  \includegraphics[scale=0.6]{figures/full-ANL-Intr.pdf}
+  \includegraphics[scale=0.6]{figures/full-UniLu-Ga.pdf}
   \caption{Evolution of the average cumulative waiting time improvement
     compared to EASY-FCFS of the policies $P_i$ for $i = 1 \ldots 10$ on the
     UniLu-Gaia trace. The average is obtained by resampling the original trace
@@ -1037,11 +1037,12 @@ a quarter to the whole gap between the Random and Full Feedback strategies.
 
 \begin{figure}[]
   \centering
-  \includegraphics[scale=0.6]{figures/mosaicbandit-ANL-Intr.pdf}
+  \includegraphics[scale=0.6]{figures/mosaicbandit-UniLu-Ga.pdf}
 
-  \caption{Share of the policies chosen by Epsilon-Greedy as a function of
-  time. The average choice is obtained by resampling the original trace 60 
-times and aggregating by date.}
+  \caption{Share of the policies chosen by Epsilon-Greedy($\Delta=$1 day,
+  $\epsilon = 0.5, \lambda = 1 $) as a function of time for the UniLu-Gaia
+trace. The average choice is obtained by resampling the original trace 60 times
+and aggregating by date.}
 
   \label{fig:mosb}
 \end{figure}
@@ -1054,17 +1055,18 @@ represents the value. Moreover, the proportion of times each policies are
 chosen by the strategy is aggregated across resampled traces.
 
 While this policy obtains an excellent performance, the convergence to a fixed
-policy is slow.  This is not harmful \textit{per se} and just means that the
-variability in the waiting times is indeed high. Additionally, we observe that
-the increasingly dominant policy, LCFS, is the second best overall policy. This
-is perhaps due to the estimation bias stemming from the boundary conditions of
-the weekly simulations.
+policy is slow.  This is not harmful \textit{per se} and just means that it is
+difficult to distinguish between the best policies. Additionally, we observe that
+the two increasingly dominant policy, LAF and LQF, are the best overall policies.
+This means that the estimation converges to the correct point.
+
 
 \begin{figure}[]
   \centering
-  \includegraphics[scale=0.6]{figures/mosaic-ANL-Intr.pdf}
+  \includegraphics[scale=0.6]{figures/mosaic-UniLu-Ga.pdf}
 
-  \caption{Share of the policies chosen by the Noisy policy. The average choice
+  \caption{Share of the policies chosen by the Noisy policy as a function of time
+    for the UniLu-Gaia trace. The average choice
   is obtained by resampling the original trace 60 times and aggregating by
   date.}
 
