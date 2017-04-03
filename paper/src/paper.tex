@@ -109,18 +109,18 @@ Providing the computing infrastuctures needed to solve actual complex problems
 arising in the various fields of modern society (including climate change,
 health, green energy or security) is a strategic challenge. The main pillar of
 the answer to this challenge is to build extreme-scale parallel and distributed
-platforms. The never-ending race for more computing power and storage capacity does
-not only lead to sophisticated specific Exascale platforms, but the objective
-of the community is to design efficient sustained Petascale platforms. This
-large-scale evolution and the increasing complexity in both architecture and
-applications create many scientific and technical problems. Accordingly, system
-management software still has a long way to go. The existing job and resource
-management software allow to run tens of thousands of jobs on hundreds of thousands
-of cores. They are based on robust policies, however, despite their positive
-properties such as relative simplicity and prevention of job starvation,
-there is still room for improvement. Here, we propose to study how to tune the
-ordering of the submission queues in the frame of the classical
-EASY-BackFilling family of heuristics using two new online learning approaches
+platforms. The never-ending race for more computing power and storage capacity
+does not only lead to sophisticated specific Exascale platforms, but the
+objective of the community is to design efficient sustained Petascale
+platforms. This large-scale evolution and the increasing complexity in both
+architecture and applications create many scientific and technical problems.
+Accordingly, system management software still has a long way to go. The
+existing job and resource management software allow to run tens of thousands of
+jobs on hundreds of thousands of cores. These software are based on robust
+policies with positive properties such as relative simplicity and prevention of
+job starvation. However, there is still room for improvement. Here, we propose
+to study how to tune the ordering of the submission queues in the frame of the
+classical EASY-BackFilling family of heuristics using two new online approaches
 (an approach based on a simulator and an approach using multi-armed bandit).
 
 Most common work in the literature consider \textit{a posteriori} optimization
@@ -130,8 +130,8 @@ study more sophisticated policies that could leverage these data.  During the
 last few years, there was an explosion of the number of works at the interface
 of HPC and BigData fields, dealing with learning algorithms. Recent
 sophisticated approaches developed \textit{ad hoc} supervised machine learning
-algorithms for reducing uncertainty in problem parameters (e.g. job execution
-times, memory requirements, etc.) via prediction. However, only few studies
+algorithms for reducing uncertainty in problem parameters (e.g.\ job execution
+times, memory requirements, etc.). However, only few studies
 evaluate the impact of such techniques on the performances of the resource
 manager.
 
@@ -196,7 +196,7 @@ whose practical ramifications, varying hypotheses, and inherent uncertainty of
 the problem applied to the HPC field have driven practitioners to use simple
 heuristics (and researchers to study their behavior). The two most popular
 heuristics for HPC platforms are EASY~\cite{easy} and
-Conservative~\cite{Mu'alem:2001:UPW:380314.380315} backfillings.
+Conservative~\cite{Mu'alem:2001:UPW:380314.380315} backfilling.
 
 While Conservative Backfilling offers many advantages~\cite{bfchar}, it has a
 significant computational overhead, which mainly explains why most of the
@@ -216,14 +216,14 @@ these studies most often report \textit{post-hoc} performance since they
 compare algorithms after the workload is known.
 
 The dynP scheduler~\cite{streit_selftuning_2002} proposes a systematic
-method to tunine these queues, although it requires simulated scheduling runs
+method to tuning these queues, although it requires simulated scheduling runs
 at decision time and therefore, it costs much more than the natural execution of EASY.
 
 \subsection{Data-aware resource management.}
 
 There was a recent focus on leveraging the huge amount of data available in
 large scale computing platforms in order to improve system performance. Some
-works use collaborative filtering to colocate tasks in clouds by estimating
+works use collaborative filtering to co-locate tasks in clouds by estimating
 application interference~\cite{7516031}. Some others are closer to the
 application level. For instance, ~\cite{fmodeling} uses binary classification
 to distinguish benign memory faults from application errors in order to execute
@@ -320,11 +320,11 @@ The selection of the job to run is performed according to a scheduling policy,
 which determines the order in which the jobs are executed. EASY-Backfilling is
 the most widely used policy due to its simple and robust implementation and
 known benefits such as high system utilization~\cite{easy}. This strategy has
-no worst case guarantee beyond the absence of starvation (i.e. every job will
+no worst case guarantee beyond the absence of starvation (i.e.\ every job will
 be scheduled at some moment).
 
 The EASY-FCFS heuristic uses a job queue to select and backfill jobs.  At any
-time requiring a scheduling decision (i.e. job submission or termination),
+time requiring a scheduling decision (i.e.\ job submission or termination),
 the scheduler goes through the job queue in First-Come,First-Serve (FCFS) order
 and starts jobs until it finds a job that can not be started right away. Then,
 it makes a reservation for this job at the earliest predictable time and
@@ -457,7 +457,7 @@ period. A new policy is selected at the beginning of each period and applied
 during the whole period.
 
 We further assume that there is a certain regularity among periods,
-\textit{i.e.} that the distribution of the job submission process does not
+i.e.\ that the distribution of the job submission process does not
 radically differ between consecutive periods. This assumption is validated in
 the study presented in~\cite{jsspp17}. It further entails that the behavior of
 a policy on the previous periods reflects its behavior on the current one, so
@@ -469,7 +469,7 @@ policies for the KTH-SP2 trace (see~\ref{sub:traces} for a description of the
 workloads) using weekly periods encompassing one year. As one can note, the
 average waiting time varies a lot from one week to the other, for all the 7
 policies considered. This indicates that when when the cost metric is averaged
-over different periods, there is a tradeoff to find in between longer periods
+over different periods, there is a trade-off to find in between longer periods
 that would somehow limit the variability, and shorter ones that yield more
 values for the estimation. We will come back to this issue below.
 
@@ -581,7 +581,7 @@ Thus, we explore here a more efficient strategy that dispenses with estimating
 the cost of all policies at a given time and only updates the cost of the
 policy that is currently being used. This strategy makes use of the
 $\epsilon$-greedy exploration method, standard in reinforcement learning
-\cite{Watkins:1989} and bandit problems~\cite{Auer2002}, to tradeoff
+\cite{Watkins:1989} and bandit problems~\cite{Auer2002}, to trade-off
 exploitation and exploration, and relies, as before, on past estimates of the
 cost to select the best policy in the exploitation mode.
 
@@ -647,7 +647,7 @@ We believe this is due to the properties of the traces we use, as explained in
 Section~\ref{sec:experiments}. The $\epsilon$-greedy strategy is known to be
 outperformed in terms of regret by other classical algorithms such as the UCB
 or EXP family of algorithms. See~\cite{bubnow} for a precise definition and
-thourough treatment of this subject. These algorithms however all rely on
+thorough treatment of this subject. These algorithms however all rely on
 pre-normalized rewards. Here, the scale of $w_{\epsilon}(t;P_i)$ is not known
 in advance. While the usual doubling tricks can be devised to go around
 sequential issues of scale with good asymptotical performance, they ruin
@@ -721,14 +721,14 @@ clean singular data. More precisely, we apply the following modifications:
 \subsubsection{Simulator}
 
 The choice of a simulator is a critical part of experimental validation that
-raises a tradeoff between precision and runtime. High precision can be obtained
+raises a trade-off between precision and runtime. High precision can be obtained
 by carefully modeling the platform and its network topology, or extracting
-information from the jobs from their sources or post-morted logs. This is the
+information from the jobs from their sources or post-mortem logs. This is the
 approach used by high-fidelity batch scheduling simulators such as
 Batsim~\cite{batsim}. In the present work, the focus is on studying the
-EASY-Backfilling mechanism in itself, without adressing the allocation problem.
+EASY-Backfilling mechanism in itself, without addressing the allocation problem.
 Moreover, the experimental protocol used here requires many simulation runs.
-Therefore, we set the precision/runtime tradeoff at the point which minimizes
+Therefore, we set the precision/runtime trade-off at the point which minimizes
 simulation runtimes. We discard all topological information relative to the
 platform and use the job processing times of the original workloads. In this
 setup, the processors are considered to be undistinguishable from each other,
@@ -752,13 +752,13 @@ performance is known to outrank the available sample sizes: \textit{It is not
 enough to simply replay an algorithm using a workload trace}. Indeed, as
 presented in Figure~\ref{fig:variability}, the objective function we are using
 in this work is subject to high variability. This variability can be so extreme
-that even a timeframe of a fews years can be insufficient to compare scheduling
+that even a time-frame of a fews years can be insufficient to compare scheduling
 algorithms. In our experience inverting some months in the trace at random can
 lead to reversal in the results. This motivated decades of research in workload
 modeling~\cite{feitbook}. A recent approach~\cite{feitresampling} proposes to
 resample data directly from the original traces. In this work, we use a simple
 implementation of these ideas.  More precisely, we want to sample the job
-submission process, which is achieved in the following manner: For evey week in
+submission process, which is achieved in the following manner: For every week in
 a resampled trace, we iterate over every existing user in the original trace.
 For each of these users, we choose a week of the original trace uniformly at
 random. The jobs from this user in this original week are chosen to be present
@@ -799,17 +799,17 @@ EASY($P,\Theta=40h$) using the following strategies:
     compare how well strategies proposed in this work with the best
     \textit{a-posteriori} known policy.
 
-  \item The simulation-based ("full feedback") strategy with hyperparameter
+  \item The simulation-based ("full feedback") strategy with hyper-parameter
     $\Delta \in \left\{ 1 \text{day},1 \text{week} \right\}$. This choice of
-    hyperparameter is a consequence of the natural rythm of human activity:
+    hyper-parameter is a consequence of the natural rhythm of human activity:
     daily or weekly simulation periods seem to facilitate comparability of
     performance between two periods. Indeed, arbitrary period values would
     needlessly increase the variability of the cost metric.
 
-  \item The noisy simulation ("noisy feedback") variant with hyperparameter
+  \item The noisy simulation ("noisy feedback") variant with hyper-parameter
     $\Delta \in \left\{ 1 \text{day},1 \text{week} \right\}$.
 
-  \item The bandit feedback strategy with hyperparameters $\lambda=1, \Delta
+  \item The bandit feedback strategy with hyper-parameters $\lambda=1, \Delta
     \in \left\{ 1 \text{day},1 \text{week} \right\}$. The choice of $\lambda=1$
     means that we use no decay in the estimation of the overall cost. Choosing
     to eliminate decay in this experimental campaign is natural since our
@@ -817,7 +817,7 @@ EASY($P,\Theta=40h$) using the following strategies:
     explained in~\ref{ssub:resampling}.
 
   \item An additional "Random" strategy to be used as a reference point, with
-    hyperparameter $ \Delta \in \left\{ 1 \text{day},1 \text{week} \right\}$.
+    hyper-parameter $ \Delta \in \left\{ 1 \text{day},1 \text{week} \right\}$.
     This strategy corresponds to choosing $P_i$ uniformly at random in $\left\{
       P_1 , \cdots, P_{12} \right\}$ during every period $\Delta_t$.
 
@@ -890,10 +890,10 @@ attainable performance in the search set defined in~\ref{subsec:policies}.
 Note that there seems to be some regularity; the SAF policy is remarkably
 inefficient for instance, and the LQF policy works very well. However, note
 that there are traces for which LQF is not optimal. Moreover, these
-are~\textit{a-posteriori} results, which means that we only know post-factum
-that this policy would have been better. In the present work, we are
-studying adaptive policies that obtain a good performance on any given system
-by selecting one of these policies.
+are~\textit{a-posteriori} results, which means that we only know
+textit{post-factum} that this policy would have been better. In the present
+work, we are studying adaptive policies that obtain a good performance on any
+given system by selecting one of these policies.
 
 \begin{figure}[]
   \centering
@@ -907,7 +907,7 @@ by selecting one of these policies.
 \end{figure}
 
 Figure~\ref{fig:all} reports the evolution of the average cumulative waiting
-time for the UniLu-Gaia tis quantityrace, which means that it shows how the
+time for the UniLu-Gaia, which means that it shows how the
 average improvement in cumulative waiting time evolves as a function of time.
 In other words, this is the average curve obtained if one were to plot the
 cumulative sum of job waiting times for every resampled trace, incrementing the
@@ -919,7 +919,7 @@ Observe that while the 10th and 90th percentiles of the improvement with
 respect to EASY-FCFS are large, the values are still contained enough to make
 definite statements about how these policies compare to the FCFS baseline.
 This figure does not report the variability of the policies against one another,
-and does not allow to compare them beyong comparing their average performance.
+and does not allow to compare them beyond comparing their average performance.
 However, the fact that the band of percentiles are roughly of the size of half
 the best attainable improvement was our original motivation for this work, as
 one can expect to be able to distinguish between these policies in an
@@ -1092,7 +1092,7 @@ to considerable gains in performance.
 This approach was used in two methods: a method based on a simulator and a
 method based on a multi-armed bandit algorithm. The first one provides very
 good results, reducing the average waiting times of the baseline FCFS ordering
-policy by 11\% to 60\%. The second one is slighly less efficient with an
+policy by 11\% to 60\%. The second one is slightly less efficient with an
 improvement factor of 8\% to 46\%. However, it is easier to use and cheaper
 to run.
 
@@ -1133,11 +1133,11 @@ the French program Investissement d'avenir.
 
 \subsection{Abstract}
 
-This appendix describes the computational artifacts associated with this work. We
-take a lightweight approach to replicability by packaging a declarative
-workflow that generates all the figures from this paper and making it available
-publicly. Moreover, questions regarding replication can be freely directed at
-the authors via e-mail.
+This appendix describes the computational artifacts associated with this work.
+We take a lightweight approach to replicability by packaging and publishing a
+declarative workflow that generates all the figures from this paper. Moreover,
+questions regarding replication can be freely directed to the authors via
+e-mail.
 
 All the code associated with this work is released under the ~\cite{isc}
 license as a persistent zenodo~\cite{zenodo} archive~\cite{repro}.
@@ -1146,9 +1146,10 @@ license as a persistent zenodo~\cite{zenodo} archive~\cite{repro}.
 
 There are various approaches for making computational experiments replicable,
 among which distributing complete operating system images, containers, or
-packaging software. As our experiments are cpu bound, we decide to opt for the
-software packaging approach. This allows for replicating the experiments on clusters where virtualization is not
-available or kernels are too old for containers old and decreases runtime.
+packaging software. As our experiments are CPU bound, we decide to opt for the
+software packaging approach. This allows for replicating the experiments on
+clusters where virtualization is not available or kernels are too old for
+containers and decreases simulation runtime.
 
 All the dependencies of our
 experiments (including our own code, dependencies for data processing and
@@ -1159,24 +1160,24 @@ actual execution of the code.
 
 {\small
 \begin{itemize}
-  \item {\bf algorithm: Scheduling Simulation Workflow}
-  \item {\bf program: Ocaml, R, Bash, Zymake(all sources and dependencies included)}
-  \item {\bf compilation: Ocaml 4.02.3, GNU bash version 4.4.5(1)-release, R version 3.3.2}
-  \item {\bf transformations: Patched nix standard environment.}
-  \item {\bf binary: Most binaries are cached by Nix channels.}
-  \item {\bf data set: Traces from the parallel workload archive, included.}
-  \item {\bf run-time environment: Nixpkgs 17.03}
-  \item {\bf hardware: Dell PowerEdge R730}
-  \item {\bf output: Files}
-  \item {\bf experiment workflow: \lstinline[basicstyle=\ttfamily\color{blue}]|zymakefile|, see below}
-  \item {\bf publicly available?: Open-Sourced under the ISC~\cite{isc} license.}
+  \item {\bf Algorithm: Scheduling Simulation Workflow}
+  \item {\bf Program: Ocaml, R, Bash, Zymake(all sources and dependencies included)}
+  \item {\bf Compilation: Ocaml 4.02.3, GNU bash version 4.4.5(1)-release, R version 3.3.2}
+  \item {\bf Transformations: Patched nix standard environment.}
+  \item {\bf Binary: Most binaries are cached by Nix channels.}
+  \item {\bf Data set: Traces from the parallel workload archive, included.}
+  \item {\bf Run-time environment: Nixpkgs 17.03}
+  \item {\bf Hardware: Dell PowerEdge R730}
+  \item {\bf Output: Files}
+  \item {\bf Experiment workflow: \lstinline[basicstyle=\ttfamily\color{blue}]|zymakefile|, see below}
+  \item {\bf Publicly available?: Open-Sourced under the ISC~\cite{isc} license.}
 \end{itemize}
 }
 
 \subsubsection{Obtaining the code.}
 
 The archive containing the experimental workflow can be obtained at
-\url{(omitted due to double-blind review)} Running the experiments can be done
+(URL omitted due to double-blind review). Running the experiments can be done
 on any platform equipped with the nix package manager by running at the root of
 the extracted archive:
 
@@ -1193,27 +1194,27 @@ nix-build -A banditSelection
  machine(s) used in this paper was gracefully granted by research teams from
  LIG\footnote{http://www.liglab.fr} and Inria\footnote{http://www.inria.fr}.
 
- The experiments in this paper can run via in less than 24 hours on a
+ The experiments in this paper can run in less than 24 hours on a
  moderately parallel host. More precisely, we had access to a Dell PowerEdge
- R730 equipped with a total of 56 threads @2.4GHz each and 757G of RAM. For
+ R730 equipped with a total of 56 threads @2.4GHz each and 757 Gigabites of RAM. For
  this reason, the experimental campaign workflow was designed to be executed on
  a single host.
 
 \subsubsection{Software dependencies}
 
 All the software dependencies of our experiments are automatically managed by Nix.
-The Nix software is available at \url{https://nixos.org/nix}.
+The Nix package manager is available at \url{https://nixos.org/nix}.
 
 \subsubsection{Datasets}
 
-All data from this paper was obtained from the Swf Parallel Workloads
+All data from this paper were obtained from the Swf Parallel Workloads
 Archive~\cite{Feitelson20142967}. The data is cached in gzipped format in the
 persistent archive associated with this workflow, should the Parallel
-Workdloads Archive become unavailable.
+Workloads Archive become unavailable.
 
 \subsection{Installation}
 
-The experiment dependencies are loaded into the environment by the
+The experiment's dependencies are loaded into the environment by the
 \lstinline[basicstyle=\ttfamily]|nix-build| command.
 
 Nevertheless, the reader interested in using the tools outside the workflow can
@@ -1243,7 +1244,7 @@ This allows to use the following command-line tools:
 \subsection{Experiment workflow}
 
  All experiments are tied together using zymake~\cite{zymake}, a minimalistic
- workflow system designed for computational experiments\footnote{the zymake system
+ workflow system designed for computational experiments\footnote{The zymake system
  is also packaged by our nix expressions.}. This system is
  analogous to a traditional build system with added workflow capabilities. The
  entire workflow that generates this article from the input data is contained
@@ -1254,7 +1255,7 @@ This allows to use the following command-line tools:
  \begin{itemize}
    \item[data]: Data extraction from archives, filtering, resampling.
      this is principally using shell scripts for data manipulation (see file
-     \lstinline[basicstyle=\ttfamily\color{blue}]|misc/strong\_filter| for the
+     \lstinline[basicstyle=\ttfamily\color{blue}]|misc/strong_filter| for the
      filtering steps used) and ocaml code that implements the resampling method
      described in~\ref{ssub:resampling}.
 
@@ -1275,15 +1276,8 @@ the archive.
 
 \subsection{Experiment customization}
 
-Readers interested with modifying the experiments can obtain the zenodo archive
-at \url{https://truc.tgz}
-
-The experiments are replicated with the same procedure as before, this time
-invoking the build command with the local folder:
-
-\begin{lstlisting}
-nix-build -A banditSelection
-\end{lstlisting}
+Readers interested in modifying the experiments can obtain the zenodo archive
+at (URL omitted due to peer review).
 
 The file tree has the following structure:
 
@@ -1303,6 +1297,19 @@ The file tree has the following structure:
 Most simple workflow modifications (using different traces, changing the sample
 sizes) can be obtained by modifying the
 \lstinline[basicstyle=\ttfamily\color{blue}]|zymakefile|.
+
+The experiments can then be run as before via:
+
+\begin{lstlisting}
+nix-build -A banditSelection
+\end{lstlisting}
+
+Additionally, the experiments can be launched manually via:
+
+\begin{lstlisting}
+nix-shell -A banditSelection
+zymake -l localhost zymakefile
+\end{lstlisting}
 
 \subsection{Notes}
 
