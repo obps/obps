@@ -734,15 +734,15 @@ simulation runtimes. We discard all topological information relative to the
 platform and use the job processing times of the original workloads. In this
 setup, the processors are considered to be undistinguishable from each other,
 and jobs can be discontinuously mapped to any available processor on the
-system. We develop a lightweight simulator\cite{ocst} and an accompanying
-multi-armed bandit library\cite{obandit}. See the reproducibility paragraph
-below for more information.  With this simulator, we are able to replay
-EASY-FCFS on the CEA-CURIE trace in 33 seconds with a machine equipped with an
-Intel(R) Core(TM) i5-4310U CPU @ 2.00GHz. As a point of comparison, the Batsim
-simulator with no network communication modeling and no resource contiguity
-takes more than 7 hours to replay the same trace on the same hardware. The
-complete simulation campaign presented below is executed on a single Dell
-PowerEdge R730 in 22 hours, including input preparation and analysis code.
+system. We develop a lightweight simulator\cite{ocst} and release it to the
+community. See the reproducibility paragraph below for more information.  With
+this simulator, we are able to replay EASY-FCFS on the CEA-CURIE trace in 33
+seconds with a machine equipped with an Intel(R) Core(TM) i5-4310U CPU @
+2.00GHz. As a point of comparison, the Batsim simulator with no network
+communication modeling and no resource contiguity takes more than 7 hours to
+replay the same trace on the same hardware. The complete simulation campaign
+presented below is executed on a single Dell PowerEdge R730 in 22 hours,
+including input preparation and analysis code.
 
 \subsubsection{Resampling}
 \label{ssub:resampling}
@@ -783,7 +783,7 @@ future research.
 \subsubsection{Experimental campaign}
 
 We use devise the following experimental campaign. For each of the 7 workloads
-considered, we use the original data to resample 100 traces, each of a length
+considered, we use the original data to resample 60 traces, each of a length
 of two years. For each resampled trace, we run simulations using the
 EASY($P,\Theta$) scheduling heuristic. We fix the value of the job waiting time
 threshold $\Theta$ at 40 hours, a sane default. The choice of this default
@@ -824,7 +824,7 @@ EASY($P,\Theta=40h$) using the following strategies:
 
 \end{itemize}
 
-The experiment campaign consists of 7 traces $\times$ 100 resamples $\times$
+The experiment campaign consists of 7 traces $\times$ 60 resamples $\times$
 (12+2+2+2) algorithms, which equate to 12600 scheduling simulations spanning
 two years.  This means a total simulated timespan of 25200 years. Moreover,
 both the full-feedback and noisy feedback strategies will also be calling
@@ -871,7 +871,7 @@ We begin by attracting the attention of the reader to Table~\ref{tab:full},
 which reports the average total waiting time performance improvement over
 EASY(FCFS,40h) of all the fixed policies defined in ~\ref{subsec:policies}. More
 precisely, let us denote the resampled traces of a given workload by $T_k$,
-where k is the index of the resampled trace ($1 \le k \le 100$). We also denote
+where k is the index of the resampled trace ($1 \le k \le 60$). We also denote
 the number of jobs in the resampled trace $T_k$ by $l(T_k)$. We denote by
 $\bar{w}(T_k,S)$ the cumulative waiting time obtained by a simulation run for a
 strategy $S$:
@@ -883,8 +883,8 @@ strategy $S$:
 So that the values appearing in Table~\ref{tab:full} are exactly:
 
 \begin{equation}
-  \frac{\sum_{k=1}^{k=100}\bar{w}(T_k,\text{EASY}(P_i,40h))-
-  \bar{w}(T_k,\text{EASY}(\text{FCFS},40h))}{\sum_{k=1}^{k=100}\bar{w}(T_k,\text{EASY}(\text{FCFS},40h))}
+  \frac{\sum_{k=1}^{k=60}\bar{w}(T_k,\text{EASY}(P_i,40h))-
+  \bar{w}(T_k,\text{EASY}(\text{FCFS},40h))}{\sum_{k=1}^{k=60}\bar{w}(T_k,\text{EASY}(\text{FCFS},40h))}
 \end{equation}
 
 The best values are outlined in bold in the table. These values give the best
@@ -903,7 +903,7 @@ by selecting one of these policies.
   \caption{Evolution of the average cumulative waiting time improvement
     compared to EASY-FCFS of the policies $P_i$ for $i = 1 \ldots 10$ on the
     UniLu-Gaia trace. The average is obtained by resampling the original trace
-    100 times. The dashed lines represent the 10th and 90th percentiles of the
+    60 times. The dashed lines represent the 10th and 90th percentiles of the
   values across this resampling.}
   \label{fig:all}
 \end{figure}
@@ -938,7 +938,7 @@ online manner.
 
   \caption{Evolution of the average cumulative waiting time improvement
     compared to EASY-FCFS of the FullFeedback, NoisyFeedback and EpsilonGreedy
-    policies. The average is obtained by resampling the original trace 100
+    policies. The average is obtained by resampling the original trace 60 
     times. The dashed lines represent the 10th and 90th percentiles of the
   values across this resampling. Each figure is a different trace, and this
 figure is followed-up in figure~\ref{fig:follow} for the UniLu-Gaia log.}
@@ -962,7 +962,7 @@ we propose in the same format as Figure~\ref{fig:all}. There are five
 strategies displayed on the graph:
 
 \begin{itemize}
-  \item Random $P \in P_i, 1 \le k \le 100$. ($\Delta=$1 week)
+  \item Random $P \in P_i, 1 \le k \le 60$. ($\Delta=$1 week)
   \item Epsilon-Greedy (Bandit Feedback) ($\Delta=$1 week)
   \item Epsilon-Greedy (Bandit Feedback) ($\Delta=$1 day)
   \item Full (simulated) Feedback ($\Delta=$1 week)
@@ -1037,7 +1037,7 @@ a quarter to the whole gap between the Random and Full Feedback strategies.
   \includegraphics[scale=0.6]{figures/mosaicbandit-ANL-Intr.pdf}
 
   \caption{Share of the policies chosen by Epsilon-Greedy as a function of
-  time. The average choice is obtained by resampling the original trace 100
+  time. The average choice is obtained by resampling the original trace 60 
 times and aggregating by date.}
 
   \label{fig:mosb}
@@ -1062,7 +1062,7 @@ the weekly simulations.
   \includegraphics[scale=0.6]{figures/mosaic-ANL-Intr.pdf}
 
   \caption{Share of the policies chosen by the Noisy policy. The average choice
-  is obtained by resampling the original trace 100 times and aggregating by
+  is obtained by resampling the original trace 60 times and aggregating by
   date.}
 
   \label{fig:mosn}
@@ -1142,7 +1142,7 @@ publicly. Moreover, questions regarding replication can be freely directed at
 the authors via e-mail.
 
 All the code associated with this work is released under the ~\cite{isc}
-license as a persistent zenodo~\cite{zenodo} archive at~\cite{zenodomain}.
+license as a persistent zenodo~\cite{zenodo} archive~\cite{repro}.
 
 \subsection{Description}
 
@@ -1177,13 +1177,13 @@ actual execution of the code.
 
 \subsubsection{Obtaining the code.}
 
-\textbf{one-liner : replication}
-
-Running the experiments can be done on any platform equipped with the nix
-package manager by running:
+The archive containing the experimental workflow can be obtained at
+\url{(omitted due to double-blind review)} Running the experiments can be done
+on any platform equipped with the nix package manager by running at the root of
+the extracted archive:
 
 \begin{lstlisting}
-nix-build (fetchTarball ...)
+nix-build -A banditSelection
 \end{lstlisting}
 
 \subsubsection{Hardware}
@@ -1204,6 +1204,7 @@ nix-build (fetchTarball ...)
 \subsubsection{Software dependencies}
 
 All the software dependencies of our experiments are automatically managed by Nix.
+The Nix software is available at \url{https://nixos.org/nix}.
 
 \subsubsection{Datasets}
 
@@ -1218,14 +1219,8 @@ The experiment dependencies are loaded into the environment by the
 \lstinline[basicstyle=\ttfamily]|nix-build| command.
 
 Nevertheless, the reader interested in using the tools outside the workflow can
-obtain an environment by running the
-\lstinline[basicstyle=\ttfamily]|nix-shell| command:
-
-\begin{lstlisting}
-nix-shell (fetchTarball ...)
-\end{lstlisting}
-
-Or alternatively, if the user is at the root of the extracted archive:
+obtain an environment by running a \lstinline[basicstyle=\ttfamily]|nix-shell| command
+at the root of the extracted archive:
 
 \begin{lstlisting}
 nix-shell -A banditSelection
@@ -1309,7 +1304,7 @@ The file tree has the following structure:
 
 Most simple workflow modifications (using different traces, changing the sample
 sizes) can be obtained by modifying the
-\lstinline[basicstyle=\ttfamily\color{blue}]|zymakefile|. For modification
+\lstinline[basicstyle=\ttfamily\color{blue}]|zymakefile|.
 
 \subsection{Notes}
 
